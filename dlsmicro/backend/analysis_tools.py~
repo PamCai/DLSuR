@@ -1,0 +1,71 @@
+import numpy as np
+from scipy import special
+
+
+class Micro:
+    #####################################################
+    #Default constructor
+    #####################################################
+    #inputs:
+    #self
+    #t-delay times for intensity correlation
+    #g2-intensity auto-correlation function
+    #g0 - 0 time intercept of the auto-correlation g2-1
+    #r  - radius of tracer particles
+    def __init__(self,t,g2,r,g0=None):
+        self.g2=g2
+        self.t=t
+        self.r=r
+        if g0 is None:
+            self.g0=g2[0]-1.
+        else:
+            self.g0=g0
+
+
+####################################################
+#g1 function
+####################################################
+
+#obtain the field autocorrelation function g1
+#Note that non-ergodic systems require special
+#treatment
+#Inputs:
+#ergodic - is system ergodic (not true for gels)
+#I - time-averaged intensity at the measurement position of interest
+#Ie - vector of scattering intensities collected at
+#different positions in the ensemble (needed for non-ergodic systems)
+
+def calc_g1(g2, g0, ergodic, Ip=None,Ie=None, eps=None):
+    """Calculate g1 intermediate scattering function from intensity autocorrelation
+
+    Parameters 
+    __________
+    g2 : 1d-array 
+         Scattering intensity autocorrelation function
+    g0 : float
+         Intercept of g2 - 1 at time 0
+    ergodic: boolean
+             If False, corrections are made for non-ergodic systems based on Ip and Ie
+    Ip: float
+        Scattering intensity at the position where correlation function is collected.
+        (Only used if Ergodic is False)
+    Ie: 1d-array
+        Vector of scattering intensities at different positions in the cuvette
+    """
+    if ergodic:
+        self.g1=sqrt((self.g2-1.))
+        g1
+    else:
+        Ie_avg=average(Ie)
+        #calculate the ratio of ensemble to time averaged
+        #intensities
+        Y=Ie_avg/Ip
+        #calculate the g1 correlation function
+        if eps is None:
+            g1=(Y-1.)/Y+np.sqrt(g2-g0)/Y
+        else:
+            g1 = (1.-(1.-eps)/Y +
+                  (1-eps)*np.sqrt(1. +
+                                  (g2-g0-1.)/(1-eps)**2.)/Y)
+        return g1
+

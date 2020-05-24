@@ -1,0 +1,106 @@
+import numpy as np
+from numpy import linalg 
+from numpy import random
+
+##########################################################
+#gauusian_weight
+#compute a gaussian weight matrix W, given a vector x
+#the reference observation point i (index) and a bandwith
+#tau
+##########################################################
+
+def gaussian_weight(x,i,tau):
+    #compute the vector of weights
+    w = np.exp(-((x-x[i])**2.)/(tau))
+    #transform into a diagonal array
+    W = np.diag(w)
+    return W
+
+#########################################################
+#Weighted linaer regression
+#perform linear regression given a matrix of inputs
+#X, whose rows correspond to observations and whose columns
+#correspond to features and a vector of outputs
+#y
+#inputs:
+#X - matrix of inputs (mXn) with m features and n observations
+#y - vector of ouput observations (size n)
+#W - n X n weight matrix
+#ouputs:
+#theta - vector of best-fit parameters
+#########################################################
+
+def weighted_linear_reg(X,y,W):
+    m1 = linalg.inv(np.dot(np.dot(X.T,W),X))
+    m2 = np.dot(np.dot(X.T,W),y)
+
+    theta = np.dot(m1,m2)
+    return theta
+
+#####################################################################
+#Loess
+#Compute a locally weighted linear regression given a vector
+#of inputs x and a vector of outputs y
+#Inputs
+#x - vector of inputs
+#y - vector of ouputs
+#degree - degree of polynomial for fit (1 or 2)
+#alpha - smoothing parameter. Defined as the ratio of tau**2. divided
+#by the square in the difference between the two extrema in x
+
+
+def loess(x,y,degree,alpha):
+    n = len(x)
+    #######################################################
+    #First degree polynomial regression
+    #######################################################
+    if degree == 1:
+        
+        #First feature in the X array is a constant
+        #Second feature is the value of x
+        const = np.ones(n)
+        X = np.array([const,x]).T
+        W = np.identity(n)
+        tau = alpha * np.sqrt((x[0]-x[-1])**2.)
+      
+        #Construct the theta matrix
+        Theta = np.zeros([2,n])
+        #Construct the prediction vector
+        yp = np.zeros(n)
+        #Loop over observations
+        for i in range(n):
+            #compute the weight matrix
+            W = gaussian_weight(x,i,tau)
+           #perform linear regression
+            theta = weighted_linear_reg(X,y,W)
+            Theta[:,i] = theta
+            yp[i] = np.dot(X[i,:],theta)
+        return [Theta,yp]
+
+    #######################################################
+    #Second degree polynomial regression
+    #######################################################
+    if degree == 2:
+        
+        #First feature in the X array is a constant
+        #Second feature is the value of x
+        #Third feature is the value of x**2.
+        const = np.ones(n)
+        X = np.array([const,x,x**2.]).T
+        W = np.identity(n)
+        tau = alpha * np.sqrt((x[0]-x[-1])**2.)
+      
+        #Construct the theta matrix
+        Theta = np.zeros([3,n])
+
+        #Construct the prediction vector
+        yp = np.zeros(n)
+        #Loop over observations
+        for i in range(n):
+            #compute the weight matrix
+            W = gaussian_weight(x,i,tau)
+            #perform linear regression
+            theta = weighted_linear_reg(X,y,W)
+            Theta[:,i] = theta
+            yp[i] = np.dot(X[i,:],theta)
+        return [Theta,yp]
