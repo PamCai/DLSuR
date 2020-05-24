@@ -6,6 +6,7 @@ import csv
 import os
 import sys
 from setuptools import setup, find_packages
+import versioneer
 
 # Constants
 DISTNAME = 'DLSuR'
@@ -20,7 +21,8 @@ with open('README.md', encoding='utf8') as f:
     LONG_DESCRIPTION = '\n'.join([x for x in README if not x[:3]=='[!['])
 
 
-VERSION = '0.1.0'
+VERSION = versioneer.get_version()
+CMDCLASS = versioneer.get_cmdclass()
 
 
 # Parse requirements.txt
@@ -49,6 +51,7 @@ setup_info = dict(
                  'Topic :: Scientific/Engineering :: Mathematics',
                  'Topic :: Scientific/Engineering :: Physics',
                  ],
+    cmdclass=CMDCLASS,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
