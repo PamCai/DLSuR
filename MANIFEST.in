@@ -1,0 +1,2 @@
+include versioneer.py
+include dlsmicro/_version.py
