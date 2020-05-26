@@ -1,7 +1,7 @@
 import numpy as np
-from dlsmicro import analysis_tools
-from dlsmicro import io
-from dlsmicro import utils
+from dlsmicro.backend import analysis_tools
+from dlsmicro.backend import io
+from dlsmicro.backend import utils
 import matplotlib.pyplot as plt
 import pandas as pd
 

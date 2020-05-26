@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from dlsmicro import plot_tools
+from dlsmicro.backend import plot_tools
 from matplotlib import rc
 import matplotlib as mpl
 

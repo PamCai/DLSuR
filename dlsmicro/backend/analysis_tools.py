@@ -1,9 +1,9 @@
 """ Module for processing DLS correlation data into rheological properties"""
 
 import numpy as np
-import dlsmicro.utils as utils
+import dlsmicro.backend.utils as utils
 from scipy import special
-import dlsmicro.fit_funcs as fit_funcs
+import dlsmicro.backend.fit_funcs as fit_funcs
 import pandas as pd
 
 

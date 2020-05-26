@@ -1,5 +1,5 @@
 import numpy as np
-from dlsmicro import plot_tools
+from dlsmicro.backend import plot_tools
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import rc

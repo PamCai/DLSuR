@@ -2,17 +2,17 @@ dist: xenial
 language: python
 python: 3.7.2
 install:
-- pip install -r requirements_dev.txt
+- pip install -r requirements.txt
 - pip install -e .
 script:
 - pytest
 deploy:
   provider: pypi
-  user: bbeltr1
+  user: '__token__'
   on:
     tags: true
     branch: master
-    repo: brunobeltran/python_tooling_example
+    repo: PamCai/DLSuR
   skip_existing: true
   password:
-    secure: Li52/I8je4lEa9V19GLuERHYyMTc0zNmd8Ag7H9M8FCvVYLViII9EA7IZrAIcUOxNg+GLthUP2SWe7/vV9S5lMUAKe6I+xv2cu5V+pA7RpdknCBU7ylyljCvlJNN2lnsNhYqSNRIvRM4ZFFrr5mVGJ1bBiWU11kP6YCvBJCqH3QoXETXTyuqrNPcV2BqE96W1TFdg+x51yjA3MIhZHgg6NJR77Gjz0LZKt2i7y7lkhIuCP8403b46icv0sQVtElRQ5sRZ+OMl53uHW7m2jjE7kHJWbitRDa6tf1Q9s8lShtCRMVfruo+2joQtSBsgJdpxNtyZr0UERIZ3r8PM3ARnQybBKWetBzYm6YUKxGBHQIKDEGNuR8roc5pirP1+UWSfUPonLNb6tA435+m/c5nmRXUsoqfsHj9qv72W2XUa+F1LBLsh0wt5Duy0myfSdRbqTuIWqlbVNLzIM9j/+ib2Hj1vy2L4877LojoDFTf21Zt4iYaVF66+GyjuUwyuJCPyDQI47R0E9lryB7Q/MQD7YBg7olXS+MEFyc8rG/JIp16xOIAyZoP2V9tcw/baLKU04v67CPCpnT4d/wsyC8Bzctx+WzoLlyRUFkAz+qavsSR4oOE5H6uMJK47BJJoFHX01SrY3RbeLhf+bkbw905gX8QGsrVPFmNe3j+1tW28tk=
+    secure: H5ZHowvGnCpwo8jEiSxTXNqmYuL8u4bqSfsRLWpOTTjGvtLaHs276SDuahL5k7birRSDjQAG/apQIRQFhORv2y2dkcqZZyhXetMZpJKvfeN3wLCAbpVqjekvRHVAdBx2Kzko5lOrLuF4KiWwL6OFCD8BtKHjiuijI5ftmIBO6rPp6tVjMn86yon+hOuHOqUftwjMqANsby1STop2eE+6ZEiH0yNefh69RwmvfKhjw551xEg2krPtFozcZrOjTcw2EH8pLyKdy2VLc7Q7XMYENI2XJwjHpj6rUpHidKSHa7sEaZaQgY23Q0RNstsmHYPbbYnHpawFt6/8AYkBQpmfRdXxG9MXyTd98FG2ochVPbm4iAbEJg9cIWxQFrjTm4sU8RH+3/5it+JDEDETSpXFhGmoAUDNXxrJAKEMMBMwYO3qrqI3SVEXGw/7Ea1+9m3GL2BV2QvgO+Rk1XG26eLQZ8twBjBISlJtHyTZoD+TCcAtcypahWPszK6qzSGwLmMDPc87fwzwHetNWAC2kMYo+gpENku6gvRiMQdhfrw5H95uCl0UO80kxxT4ej2372SA+igKuLG5MYdFJaGt7hARvMIonZVO/cNbIDVbp3iCXyba4w0pQCqXyq3zyKOoCJG9vz3sF+HzwOqcu09i2mrrm1BXnua1FQnlB79HzgHjHT4=

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
-from dlsmicro import plot_tools
+from dlsmicro.backend import plot_tools
 import pandas as pd
 
 def plot_time_points(df_path, n_points, plot_G_replicates=True,
