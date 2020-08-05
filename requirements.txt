@@ -3,3 +3,6 @@ scipy
 matplotlib
 pandas
 seaborn
+sphinx>=1.4
+ipykernel
+nbsphinx
