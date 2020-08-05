@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dlsmicro.backend.io &mdash; DLSuR 0.0.5+0.g87f95e1.dirty documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DLSuR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.5+0.g87f95e1.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DLSuR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dlsmicro.backend.io</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dlsmicro.backend.io</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Module for parsing data exported from Zetasizer software&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Columns name order for the dlsmicro_export.edf template</span>
+<span class="n">default_column_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Record&#39;</span><span class="p">,</span> <span class="s1">&#39;Sample Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Measurement Position&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Correlation Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Correlation Delay Times&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Distribution Fit Data&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Distribution Fit Delay Times&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Cumulants Fit Data&#39;</span><span class="p">,</span> <span class="s1">&#39;Cumulants Fit Delay Times&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Derived Count Rate&#39;</span><span class="p">,</span> <span class="s1">&#39;Measured Intercept&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;Measured Baseline&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="read_zetasizer_csv_to_dict"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.io.html#dlsmicro.backend.io.read_zetasizer_csv_to_dict">[docs]</a><span class="k">def</span> <span class="nf">read_zetasizer_csv_to_dict</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span>
+                               <span class="n">intensities_rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">column_order</span><span class="o">=</span><span class="n">default_column_order</span><span class="p">,</span>
+                               <span class="n">use_zetasizer_g1</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Read csv file exported from the Zetasizer software to a</span>
+<span class="sd">    dictionary containing data relevant to DLS microrheology analysis</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_path : str</span>
+<span class="sd">                Path to the .csv file to be read</span>
+<span class="sd">    row : int</span>
+<span class="sd">          Row number (0-indexed) for the measurement record containing the</span>
+<span class="sd">          correlation data</span>
+<span class="sd">    intensities_rows : list of int, `optional`</span>
+<span class="sd">                       List of rows (0-indexed) corresponding to the</span>
+<span class="sd">                       scattering intensity measurements for the</span>
+<span class="sd">                       broken-ergodicity</span>
+<span class="sd">                       correction. If ``None``, it is assumed that the</span>
+<span class="sd">                       intensity measurements</span>
+<span class="sd">                       begin after the row number for the correlation data and</span>
+<span class="sd">                       end at the last</span>
+<span class="sd">                       row of the .csv file.</span>
+<span class="sd">    column_order : list of str, `optional`</span>
+<span class="sd">                   Ordered list names for the columns in the .csv file</span>
+<span class="sd">                   (depends on your export template). If you use</span>
+<span class="sd">                   the `dlsmicro_export.edf`, this parameter is not necessary.</span>
+<span class="sd">                   See ``dlsmicro.io.default_column_order``</span>
+<span class="sd">    use_zetasizer_g1 : boolean, `optional`</span>
+<span class="sd">                       If `True`, the estimated intermediate scattering</span>
+<span class="sd">                       function `g1`, measured</span>
+<span class="sd">                       baseline, and measured intercept exported by the</span>
+<span class="sd">                       Zetasizer software are used to calculate the correlation</span>
+<span class="sd">                       function. This is useful because `g1` is exported at</span>
+<span class="sd">                       higher numerical</span>
+<span class="sd">                       precision than the correlation function.</span>
+<span class="sd">                       The `g1` exported from the</span>
+<span class="sd">                       Zetasizer is `not` the true `g1` for non-ergodic</span>
+<span class="sd">                       samples, but this</span>
+<span class="sd">                       option correctly inverts the formula used by</span>
+<span class="sd">                        the Zetasizer.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data_dict : dictionary</span>
+<span class="sd">                Python dictionary containing the keys below</span>
+<span class="sd">    &#39;time_lag&#39; : 1d-array</span>
+<span class="sd">                 Vector of time-lags (in microseconds) at which the</span>
+<span class="sd">                 correlation function is measured.</span>
+<span class="sd">    &#39;correlation&#39; : 1d-array</span>
+<span class="sd">                    Vector of values of the correlation coefficient at the</span>
+<span class="sd">                    time-lags</span>
+<span class="sd">                    ``data_dict[&#39;time_lag&#39;]``</span>
+<span class="sd">    &#39;point_intensity&#39; : float</span>
+<span class="sd">                        Scattering intensity at the measurement position where</span>
+<span class="sd">                        ``data_dict[&#39;correlation&#39;]`` is collected</span>
+<span class="sd">    &#39;ensemble_intensity&#39; : 1d-array</span>
+<span class="sd">    &#39;point_position&#39; : float</span>
+<span class="sd">                       Meausrement position in the cuvette (in mm) where the</span>
+<span class="sd">                       data for the</span>
+<span class="sd">                       correlation function ``data_dict[&#39;correlation&#39;]``</span>
+<span class="sd">                       is collected</span>
+<span class="sd">    &#39;ensemble_positions&#39; : 1-d array</span>
+<span class="sd">                           Vector of measurement positions in the cuvette</span>
+<span class="sd">                           corresponding to</span>
+<span class="sd">                           the scattering intensities in</span>
+<span class="sd">                           ``data_dict[&#39;ensemble_intensity&#39;]``</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function will correctly parse the .csv file generated using the</span>
+<span class="sd">    dlsmicro_export.edf Zetasizer software template. If you would like to use</span>
+<span class="sd">    this function for parsing .csv files</span>
+<span class="sd">    from a different user-generated Zetasizer template, </span>
+<span class="sd">    the following parameters `must`</span>
+<span class="sd">    be exported. In addition,</span>
+<span class="sd">    a list of the paramters in the order in which they occur in the .csv</span>
+<span class="sd">    columns must be supplied. Note that</span>
+<span class="sd">    if generating your own Zetasizer template, you should not use the &quot;include</span>
+<span class="sd">    headers&quot; option. This does not work</span>
+<span class="sd">    well for exporting the correlation data.</span>
+
+<span class="sd">    &#39;Correlation Data&#39; : Zetasizer exports ss a string of comma separated</span>
+<span class="sd">                         values, e.g. &quot;1.000, 0.987, 0.921, ...&quot;</span>
+<span class="sd">    &#39;Correlation Data Delay Times&#39; : Zetasizer exports as a string of comma</span>
+<span class="sd">                                     separated values, e.g. &quot;0.50, 1.0, 1.5, ...&quot;</span>
+<span class="sd">    &#39;Derived Count Rate&#39;</span>
+<span class="sd">    &#39;Measurement Position&#39;</span>
+
+<span class="sd">    If ``use_zetsizer_g1==True``, then the export template ``must`` also</span>
+<span class="sd">    include the following:</span>
+<span class="sd">    &#39;Distribution Fit Data&#39;: Zetasizer exports as a string of comma separated</span>
+<span class="sd">     values, e.g. &quot;0.50, 1.0, 1.5, ...&quot;</span>
+<span class="sd">    &#39;Distribution Fit Delay Times&#39;: Zetasizer exports as a string of comma</span>
+<span class="sd">                                    separated values,</span>
+<span class="sd">                                    e.g. &quot;0.50, 1.0, 1.5, ...&quot;</span>
+<span class="sd">    &#39;Measured Intercept&#39;</span>
+<span class="sd">    &#39;Measured Baseline&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Read csv to pandas dataframe</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">column_order</span><span class="p">)</span>
+    <span class="c1"># By default, assume that scattering intensity measurements for</span>
+    <span class="c1"># broken ergodicity correction are in second row until the end of the file</span>
+    <span class="k">if</span> <span class="n">intensities_rows</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">intensities_rows</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+
+    <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="s1">&#39;Correlation Data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)])</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="s1">&#39;Correlation Delay Times&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)])</span>
+    <span class="c1"># Get the g1 correlation function data from zetasizer, which is</span>
+    <span class="c1"># more precise than g2</span>
+    <span class="n">tfit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+         <span class="p">[</span><span class="s1">&#39;Distribution Fit Delay Times&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)])</span>
+    <span class="n">g1fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+         <span class="p">[</span><span class="s1">&#39;Distribution Fit Data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)])</span>
+
+    <span class="n">B</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="s1">&#39;Measured Baseline&#39;</span><span class="p">]</span>
+    <span class="c1"># Get scattering intensity for the row of interest and</span>
+    <span class="c1"># the ensemble</span>
+    <span class="n">Ie</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">intensities_rows</span><span class="p">][</span><span class="s1">&#39;Derived Count Rate&#39;</span><span class="p">]</span>
+    <span class="n">Ip</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="s1">&#39;Derived Count Rate&#39;</span><span class="p">]</span>
+
+    <span class="n">point_pos</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="s1">&#39;Measurement Position&#39;</span><span class="p">]</span>
+    <span class="n">epos</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">intensities_rows</span><span class="p">][</span><span class="s1">&#39;Measurement Position&#39;</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+    <span class="c1"># Replace g with the data obtained from the g1 correlation</span>
+    <span class="c1"># function where the data exists</span>
+    <span class="k">if</span> <span class="n">use_zetasizer_g1</span><span class="p">:</span>
+        <span class="n">gadj</span> <span class="o">=</span> <span class="n">B</span> <span class="o">+</span> <span class="n">g1fit</span><span class="o">**</span><span class="mf">2.</span>
+        <span class="n">tinds</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">ti</span><span class="p">))</span> <span class="k">for</span> <span class="n">ti</span> <span class="ow">in</span> <span class="n">tfit</span><span class="p">]</span>
+        <span class="n">g</span><span class="p">[</span><span class="n">tinds</span><span class="p">]</span> <span class="o">=</span> <span class="n">gadj</span>
+
+    <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time_lag&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;correlation&#39;</span><span class="p">:</span> <span class="n">g</span><span class="p">,</span> <span class="s1">&#39;point_intensity&#39;</span><span class="p">:</span> <span class="n">Ip</span><span class="p">,</span>
+                 <span class="s1">&#39;ensemble_intensities&#39;</span><span class="p">:</span> <span class="n">Ie</span><span class="p">,</span> <span class="s1">&#39;point_position&#39;</span><span class="p">:</span> <span class="n">point_pos</span><span class="p">,</span>
+                 <span class="s1">&#39;ensemble_positions&#39;</span><span class="p">:</span> <span class="n">epos</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">data_dict</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pam Cai, Brad Krajina
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

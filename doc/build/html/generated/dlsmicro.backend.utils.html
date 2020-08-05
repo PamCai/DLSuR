@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dlsmicro.backend.utils &mdash; DLSuR 0.0.5+0.g87f95e1.dirty documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DLSuR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.5+0.g87f95e1.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">dlsmicro.backend.utils</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DLSuR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>dlsmicro.backend.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/dlsmicro.backend.utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dlsmicro-backend-utils">
+<span id="id1"></span><h1>dlsmicro.backend.utils<a class="headerlink" href="#dlsmicro-backend-utils" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dlsmicro.backend.utils"></span><dl class="py function">
+<dt id="dlsmicro.backend.utils.get_cross_validation_score">
+<code class="sig-prename descclassname">dlsmicro.backend.utils.</code><code class="sig-name descname">get_cross_validation_score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dlsmicro/backend/utils.html#get_cross_validation_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dlsmicro.backend.utils.get_cross_validation_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the leave-one-out cross-validation score for
+a functional model of a data set over a given fitting window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>1-d array</em>) – Length N vector  of values for the independent variable of a dataset.</p></li>
+<li><p><strong>y</strong> (<em>1-d array</em>) – Length N vector of values for the dependent variable of a dataset.</p></li>
+<li><p><strong>func</strong> (<em>callable function</em>) – Model to fit the data against. Must be of the form
+<cite>f(t, p1, p2, …, pM)</cite> where <cite>t</cite> is the independent variable and
+<cite>p1, p2, …, pM</cite> is a set of M parameters to fit.</p></li>
+<li><p><strong>p0</strong> (1-d array or list, <cite>optional</cite>) – Initial guesses for the M parameters to fit, [p1, p2, …, pM]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>cv</strong> – Leave-one-out cross-validation score for the model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dlsmicro.backend.utils.laplace_merge">
+<code class="sig-prename descclassname">dlsmicro.backend.utils.</code><code class="sig-name descname">laplace_merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">omega</span></em>, <em class="sig-param"><span class="n">G1</span></em>, <em class="sig-param"><span class="n">G2</span></em>, <em class="sig-param"><span class="n">G1_Fdirect</span></em>, <em class="sig-param"><span class="n">G2_Fdirect</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dlsmicro/backend/utils.html#laplace_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dlsmicro.backend.utils.laplace_merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the interval where the Laplace transform is valid over
+the frequency space and replace the Fourier transform data with
+the Laplace transform modulus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>omega</strong> (<em>1-d array</em>) – Vector of angular frequencies in units of rad/s</p></li>
+<li><p><strong>G1</strong> (<em>1-d array</em>) – Storage modulus at angular frequencies <code class="docutils literal notranslate"><span class="pre">omega</span></code> in units of Pa
+calculated using Fourier transform</p></li>
+<li><p><strong>G2</strong> (<em>1-d array</em>) – Loss modulus at angular frequencies <code class="docutils literal notranslate"><span class="pre">omega</span></code> in units of Pa
+calculated using Fourier transform</p></li>
+<li><p><strong>G1_Fdirect</strong> (<em>1-d array</em>) – Storage modulus at angular frequencies <code class="docutils literal notranslate"><span class="pre">omega</span></code> in units
+of Pa calculated using direct Laplace transform</p></li>
+<li><p><strong>G2_Fdirect</strong> (<em>1-d array</em>) – Loss modulus at angular frequencies <code class="docutils literal notranslate"><span class="pre">omega</span></code> in units
+of Pa calculated using direct Laplace transform</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>G1_plot</strong> (<em>1-d array</em>) – Loss modulus at angular frequencies <code class="docutils literal notranslate"><span class="pre">omega</span></code> in units of Pa
+after merging Laplace and Fourier transform moduli</p></li>
+<li><p><strong>G2_plot</strong> (<em>1-d array</em>) – Storage  modulus at angular frequencies <code class="docutils literal notranslate"><span class="pre">omega</span></code> in units of
+Pa after merging Laplace and Fourier transform moduli</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dlsmicro.backend.utils.minimize_cv_error">
+<code class="sig-prename descclassname">dlsmicro.backend.utils.</code><code class="sig-name descname">minimize_cv_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">twindows</span></em>, <em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">p0</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dlsmicro/backend/utils.html#minimize_cv_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dlsmicro.backend.utils.minimize_cv_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the fitting interval that minimizes the cross-validation
+error for a model fitted to a sub-interval of a dataset,
+given a set of possible intervals in the independent variable
+over which to perform the fit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>1-d array</em>) – Length N vector  of values for the independent variable of a dataset.</p></li>
+<li><p><strong>y</strong> (<em>1-d array</em>) – Length N vector of values for the dependent variable of a dataset.</p></li>
+<li><p><strong>twindows</strong> (<em>List of len 2 lists</em>) – List of the form [[t0, tend1], [t0, tend2], …]
+where [t0, tendi] represents the <cite>ith</cite> closed interval over which to
+fit the data set and find the cross-validation score.</p></li>
+<li><p><strong>func</strong> (<em>callable function</em>) – Model to fit the data against. Must be of the form
+<cite>f(t, p1, p2, …, pM)</cite> where <cite>t</cite> is the independent variable and
+<cite>p1, p2, …, pM</cite> is a set of M parameters to fit.</p></li>
+<li><p><strong>p0</strong> (1-d array or list, <cite>optional</cite>) – Initial guesses for the M parameters to fit, [p1, p2, …, pM]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>twindow_min</strong> (<em>List</em>) – List of the form <cite>[t0, tend]’ where t0 and tend are the
+beginning and end of the closed interval in ``t`</cite> that
+provides the lowest cross-validation score for the fitted
+model</p></li>
+<li><p><strong>pmin</strong> (<em>list</em>) – Optimal parameters for fitting the model <code class="docutils literal notranslate"><span class="pre">func</span></code> to the data
+over the sub-interval <code class="docutils literal notranslate"><span class="pre">twindow_min</span></code></p></li>
+<li><p><strong>CV_min</strong> (<em>float</em>) – Leave-one-out cross-validation error for the model <code class="docutils literal notranslate"><span class="pre">func</span></code>
+over the interval <code class="docutils literal notranslate"><span class="pre">twindow_min</span></code></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pam Cai, Brad Krajina
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

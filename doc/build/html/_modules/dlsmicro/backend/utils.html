@@ -1,0 +1,487 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dlsmicro.backend.utils &mdash; DLSuR 0.0.5+0.g87f95e1.dirty documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DLSuR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.5+0.g87f95e1.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DLSuR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dlsmicro.backend.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dlsmicro.backend.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="c1">##########################################################</span>
+<span class="c1">#gauusian_weight</span>
+<span class="c1">#compute a gaussian weight matrix W, given a vector x</span>
+<span class="c1">#the reference observation point i (index) and a bandwith</span>
+<span class="c1">#tau</span>
+<span class="c1">##########################################################</span>
+
+<span class="k">def</span> <span class="nf">gaussian_weight</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">tau</span><span class="p">):</span>
+    <span class="c1">#compute the vector of weights</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">tau</span><span class="p">))</span>
+    <span class="c1">#transform into a diagonal array</span>
+    <span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">W</span>
+
+<span class="c1">#########################################################</span>
+<span class="c1">#Weighted linaer regression</span>
+<span class="c1">#perform linear regression given a matrix of inputs</span>
+<span class="c1">#X, whose rows correspond to observations and whose columns</span>
+<span class="c1">#correspond to features and a vector of outputs</span>
+<span class="c1">#y</span>
+<span class="c1">#inputs:</span>
+<span class="c1">#X - matrix of inputs (mXn) with m features and n observations</span>
+<span class="c1">#y - vector of ouput observations (size n)</span>
+<span class="c1">#W - n X n weight matrix</span>
+<span class="c1">#ouputs:</span>
+<span class="c1">#theta - vector of best-fit parameters</span>
+<span class="c1">#########################################################</span>
+
+<span class="k">def</span> <span class="nf">weighted_linear_reg</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">W</span><span class="p">):</span>
+    <span class="n">m1</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">W</span><span class="p">),</span><span class="n">X</span><span class="p">))</span>
+    <span class="n">m2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">W</span><span class="p">),</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span><span class="n">m2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">theta</span>
+
+<span class="c1">#####################################################################</span>
+<span class="c1">#Loess</span>
+<span class="c1">#Compute a locally weighted linear regression given a vector</span>
+<span class="c1">#of inputs x and a vector of outputs y</span>
+<span class="c1">#Inputs</span>
+<span class="c1">#x - vector of inputs</span>
+<span class="c1">#y - vector of ouputs</span>
+<span class="c1">#degree - degree of polynomial for fit (1 or 2)</span>
+<span class="c1">#alpha - smoothing parameter. Defined as the ratio of tau**2. divided</span>
+<span class="c1">#by the square in the difference between the two extrema in x</span>
+
+
+<span class="k">def</span> <span class="nf">loess</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">degree</span><span class="p">,</span><span class="n">alpha</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1">#######################################################</span>
+    <span class="c1">#First degree polynomial regression</span>
+    <span class="c1">#######################################################</span>
+    <span class="k">if</span> <span class="n">degree</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+        <span class="c1">#First feature in the X array is a constant</span>
+        <span class="c1">#Second feature is the value of x</span>
+        <span class="n">const</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">const</span><span class="p">,</span><span class="n">x</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span>
+
+        <span class="c1">#Construct the theta matrix</span>
+        <span class="n">Theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="n">n</span><span class="p">])</span>
+        <span class="c1">#Construct the prediction vector</span>
+        <span class="n">yp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="c1">#Loop over observations</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="c1">#compute the weight matrix</span>
+            <span class="n">W</span> <span class="o">=</span> <span class="n">gaussian_weight</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">tau</span><span class="p">)</span>
+           <span class="c1">#perform linear regression</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">weighted_linear_reg</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">W</span><span class="p">)</span>
+            <span class="n">Theta</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span>
+            <span class="n">yp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,:],</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Theta</span><span class="p">,</span><span class="n">yp</span><span class="p">]</span>
+
+    <span class="c1">#######################################################</span>
+    <span class="c1">#Second degree polynomial regression</span>
+    <span class="c1">#######################################################</span>
+    <span class="k">if</span> <span class="n">degree</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+
+        <span class="c1">#First feature in the X array is a constant</span>
+        <span class="c1">#Second feature is the value of x</span>
+        <span class="c1">#Third feature is the value of x**2.</span>
+        <span class="n">const</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">const</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="o">**</span><span class="mf">2.</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span>
+
+        <span class="c1">#Construct the theta matrix</span>
+        <span class="n">Theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="n">n</span><span class="p">])</span>
+
+        <span class="c1">#Construct the prediction vector</span>
+        <span class="n">yp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="c1">#Loop over observations</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="c1">#compute the weight matrix</span>
+            <span class="n">W</span> <span class="o">=</span> <span class="n">gaussian_weight</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">tau</span><span class="p">)</span>
+            <span class="c1">#perform linear regression</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">weighted_linear_reg</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">W</span><span class="p">)</span>
+            <span class="n">Theta</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span>
+            <span class="n">yp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,:],</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Theta</span><span class="p">,</span><span class="n">yp</span><span class="p">]</span>
+
+<span class="c1">##################################</span>
+<span class="c1">#Numerical Laplace transform</span>
+<span class="c1">##################################</span>
+<span class="c1">#Inputs</span>
+<span class="c1">#t - time vector</span>
+<span class="c1">#f - vector of discrete values of function to be transformed</span>
+<span class="c1">#S - vector of Laplace frequencies to evaluate the transform at</span>
+
+
+<span class="k">def</span> <span class="nf">laplace</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">S</span><span class="p">):</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">s</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">L</span>
+
+
+<div class="viewcode-block" id="get_cross_validation_score"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.utils.html#dlsmicro.backend.utils.get_cross_validation_score">[docs]</a><span class="k">def</span> <span class="nf">get_cross_validation_score</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Obtain the leave-one-out cross-validation score for</span>
+<span class="sd">    a functional model of a data set over a given fitting window.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t : 1-d array</span>
+<span class="sd">        Length N vector  of values for the independent variable of a dataset.</span>
+<span class="sd">    y : 1-d array</span>
+<span class="sd">        Length N vector of values for the dependent variable of a dataset.</span>
+<span class="sd">    func : callable function</span>
+<span class="sd">           Model to fit the data against. Must be of the form</span>
+<span class="sd">           `f(t, p1, p2, ..., pM)` where `t` is the independent variable and</span>
+<span class="sd">           `p1, p2, ..., pM` is a set of M parameters to fit.</span>
+
+<span class="sd">    p0 : 1-d array or list, `optional`</span>
+<span class="sd">         Initial guesses for the M parameters to fit, [p1, p2, ..., pM]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cv : float </span>
+<span class="sd">         Leave-one-out cross-validation score for the model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cv</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">yskip</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="n">tskip</span> <span class="o">=</span> <span class="n">t</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tskip</span><span class="p">)</span>
+    <span class="c1"># Loop over each (t, y) point and perform a</span>
+    <span class="c1"># fit to func with that point removed</span>
+    <span class="c1"># calculate MSE for that point</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">ytest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">yskip</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">ttest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">tskip</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">paramsi</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">ttest</span><span class="p">,</span> <span class="n">ytest</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">p0</span><span class="p">,</span> <span class="n">maxfev</span><span class="o">=</span><span class="mi">10000</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">yfiti</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">tskip</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">*</span><span class="n">paramsi</span><span class="p">)</span>
+            <span class="n">erri</span> <span class="o">=</span> <span class="p">(</span><span class="n">yskip</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">yfiti</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="n">erri</span> <span class="o">=</span> <span class="mf">1.e3</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">cv</span> <span class="o">+</span> <span class="n">erri</span>
+    <span class="c1"># Average cv scores</span>
+    <span class="n">cv</span> <span class="o">=</span> <span class="n">cv</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="c1"># If fit is not found for this window, penalize strongly</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">paramsi</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">p0</span><span class="p">,</span> <span class="n">maxfev</span><span class="o">=</span><span class="mi">10000</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="mf">1.e6</span>
+    <span class="k">return</span> <span class="n">cv</span></div>
+
+
+<div class="viewcode-block" id="minimize_cv_error"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.utils.html#dlsmicro.backend.utils.minimize_cv_error">[docs]</a><span class="k">def</span> <span class="nf">minimize_cv_error</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">twindows</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Find the fitting interval that minimizes the cross-validation</span>
+<span class="sd">    error for a model fitted to a sub-interval of a dataset, </span>
+<span class="sd">    given a set of possible intervals in the independent variable </span>
+<span class="sd">    over which to perform the fit.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t : 1-d array</span>
+<span class="sd">        Length N vector  of values for the independent variable of a dataset.</span>
+<span class="sd">    y : 1-d array</span>
+<span class="sd">        Length N vector of values for the dependent variable of a dataset.</span>
+<span class="sd">    twindows : List of len 2 lists</span>
+<span class="sd">               List of the form [[t0, tend1], [t0, tend2], ...]</span>
+<span class="sd">               where [t0, tendi] represents the `ith` closed interval over which to</span>
+<span class="sd">               fit the data set and find the cross-validation score.</span>
+<span class="sd">    func : callable function</span>
+<span class="sd">           Model to fit the data against. Must be of the form</span>
+<span class="sd">           `f(t, p1, p2, ..., pM)` where `t` is the independent variable and</span>
+<span class="sd">           `p1, p2, ..., pM` is a set of M parameters to fit.</span>
+
+<span class="sd">    p0 : 1-d array or list, `optional`</span>
+<span class="sd">         Initial guesses for the M parameters to fit, [p1, p2, ..., pM]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    twindow_min : List</span>
+<span class="sd">                  List of the form `[t0, tend]&#39; where t0 and tend are the</span>
+<span class="sd">                  beginning and end of the closed interval in ``t`` that</span>
+<span class="sd">                  provides the lowest cross-validation score for the fitted</span>
+<span class="sd">                  model</span>
+<span class="sd">    pmin : list</span>
+<span class="sd">           Optimal parameters for fitting the model ``func`` to the data</span>
+<span class="sd">           over the sub-interval ``twindow_min``</span>
+<span class="sd">    CV_min : float</span>
+<span class="sd">             Leave-one-out cross-validation error for the model ``func``</span>
+<span class="sd">             over the interval ``twindow_min``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CVs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">twindow</span> <span class="ow">in</span> <span class="n">twindows</span><span class="p">:</span>
+        <span class="n">tinds</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">twindow</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                 <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">twindow</span><span class="p">[</span><span class="mi">1</span><span class="p">]))]</span>
+        <span class="n">tfit</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">tinds</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">tinds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">yfit</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">tinds</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">tinds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">CVs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_cross_validation_score</span><span class="p">(</span><span class="n">tfit</span><span class="p">,</span> <span class="n">yfit</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p0</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">paramsi</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">tfit</span><span class="p">,</span> <span class="n">yfit</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="n">p0</span><span class="p">,</span> <span class="n">maxfev</span><span class="o">=</span><span class="mi">100000</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">paramsi</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">CV_argmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">CVs</span><span class="p">)</span>
+    <span class="n">CV_min</span> <span class="o">=</span> <span class="n">CVs</span><span class="p">[</span><span class="n">CV_argmin</span><span class="p">]</span>
+    <span class="n">twindow_min</span> <span class="o">=</span> <span class="n">twindows</span><span class="p">[</span><span class="n">CV_argmin</span><span class="p">]</span>
+    <span class="n">pmin</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">CV_argmin</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">twindow_min</span><span class="p">,</span> <span class="n">pmin</span><span class="p">,</span> <span class="n">CV_min</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="laplace_merge"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.utils.html#dlsmicro.backend.utils.laplace_merge">[docs]</a><span class="k">def</span> <span class="nf">laplace_merge</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">G1</span><span class="p">,</span> <span class="n">G2</span><span class="p">,</span> <span class="n">G1_Fdirect</span><span class="p">,</span> <span class="n">G2_Fdirect</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Find the interval where the Laplace transform is valid over</span>
+<span class="sd">    the frequency space and replace the Fourier transform data with </span>
+<span class="sd">    the Laplace transform modulus.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    omega : 1-d array</span>
+<span class="sd">            Vector of angular frequencies in units of rad/s</span>
+<span class="sd">    G1 : 1-d array</span>
+<span class="sd">         Storage modulus at angular frequencies ``omega`` in units of Pa</span>
+<span class="sd">         calculated using Fourier transform</span>
+<span class="sd">    G2 : 1-d array</span>
+<span class="sd">         Loss modulus at angular frequencies ``omega`` in units of Pa</span>
+<span class="sd">         calculated using Fourier transform</span>
+<span class="sd">    G1_Fdirect: 1-d array</span>
+<span class="sd">                Storage modulus at angular frequencies ``omega`` in units </span>
+<span class="sd">                of Pa calculated using direct Laplace transform</span>
+<span class="sd">    G2_Fdirect: 1-d array</span>
+<span class="sd">                Loss modulus at angular frequencies ``omega`` in units</span>
+<span class="sd">                of Pa calculated using direct Laplace transform</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    G1_plot : 1-d array</span>
+<span class="sd">              Loss modulus at angular frequencies ``omega`` in units of Pa</span>
+<span class="sd">              after merging Laplace and Fourier transform moduli</span>
+<span class="sd">    G2_plot : 1-d array</span>
+<span class="sd">              Storage  modulus at angular frequencies ``omega`` in units of</span>
+<span class="sd">              Pa after merging Laplace and Fourier transform moduli</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">G1_lower</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">G2_lower</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">G1_upper</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">G2_upper</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">G1</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G1_Fdirect</span><span class="p">[</span><span class="n">n</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">G1</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G1_Fdirect</span><span class="p">[</span><span class="n">n</span><span class="p">])</span> <span class="o">!=</span> <span class="p">(</span><span class="n">G1</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">G1_Fdirect</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">G1</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">G1_Fdirect</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">G1_lower</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="k">break</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">G2</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G2_Fdirect</span><span class="p">[</span><span class="n">n</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">G2</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G2_Fdirect</span><span class="p">[</span><span class="n">n</span><span class="p">])</span> <span class="o">!=</span> <span class="p">(</span><span class="n">G2</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">G2_Fdirect</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">G2</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">G2_Fdirect</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">G2_lower</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="k">break</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">G1</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G1_Fdirect</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">G1</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G1_Fdirect</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span><span class="p">])</span> <span class="o">!=</span> <span class="p">(</span><span class="n">G1</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G1_Fdirect</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">n</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">G1</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G1_Fdirect</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">n</span><span class="p">]):</span>
+            <span class="n">G1_upper</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span>
+            <span class="k">break</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">G2</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G2_Fdirect</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">G2</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G2_Fdirect</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span><span class="p">])</span> <span class="o">!=</span> <span class="p">(</span><span class="n">G2</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G2_Fdirect</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">n</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">G2</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">n</span><span class="p">]</span><span class="o">-</span><span class="n">G2_Fdirect</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">n</span><span class="p">]):</span>
+            <span class="n">G2_upper</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span>
+            <span class="k">break</span>
+
+    <span class="n">G1_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">G1</span><span class="p">)</span>
+    <span class="n">G2_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">G2</span><span class="p">)</span>
+    <span class="n">G1_plot</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">G1_lower</span><span class="p">]</span> <span class="o">=</span> <span class="n">G1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">G1_lower</span><span class="p">]</span>
+    <span class="n">G1_plot</span><span class="p">[</span><span class="n">G1_lower</span><span class="p">:</span><span class="n">G1_upper</span><span class="p">]</span> <span class="o">=</span> <span class="n">G1_Fdirect</span><span class="p">[</span><span class="n">G1_lower</span><span class="p">:</span><span class="n">G1_upper</span><span class="p">]</span>
+    <span class="n">G1_plot</span><span class="p">[</span><span class="n">G1_upper</span><span class="p">:]</span> <span class="o">=</span> <span class="n">G1</span><span class="p">[</span><span class="n">G1_upper</span><span class="p">:]</span>
+    <span class="n">G2_plot</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">G2_lower</span><span class="p">]</span> <span class="o">=</span> <span class="n">G2</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">G2_lower</span><span class="p">]</span>
+    <span class="n">G2_plot</span><span class="p">[</span><span class="n">G2_lower</span><span class="p">:</span><span class="n">G2_upper</span><span class="p">]</span> <span class="o">=</span> <span class="n">G2_Fdirect</span><span class="p">[</span><span class="n">G2_lower</span><span class="p">:</span><span class="n">G2_upper</span><span class="p">]</span>
+    <span class="n">G2_plot</span><span class="p">[</span><span class="n">G2_upper</span><span class="p">:]</span> <span class="o">=</span> <span class="n">G2</span><span class="p">[</span><span class="n">G2_upper</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">G1_plot</span><span class="p">,</span> <span class="n">G2_plot</span></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pam Cai, Brad Krajina
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

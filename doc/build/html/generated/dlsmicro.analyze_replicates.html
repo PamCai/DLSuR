@@ -1,0 +1,232 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dlsmicro.analyze_replicates &mdash; DLSuR 0.0.5+0.g87f95e1.dirty documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DLSuR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.5+0.g87f95e1.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">dlsmicro.analyze_replicates</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DLSuR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>dlsmicro.analyze_replicates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/dlsmicro.analyze_replicates.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dlsmicro-analyze-replicates">
+<span id="id1"></span><h1>dlsmicro.analyze_replicates<a class="headerlink" href="#dlsmicro-analyze-replicates" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dlsmicro.analyze_replicates"></span><dl class="py function">
+<dt id="dlsmicro.analyze_replicates.analyze_replicates">
+<code class="sig-prename descclassname">dlsmicro.analyze_replicates.</code><code class="sig-name descname">analyze_replicates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">csv_name</span></em>, <em class="sig-param"><span class="n">root_folder</span></em>, <em class="sig-param"><span class="n">replicates</span></em>, <em class="sig-param"><span class="n">T</span></em>, <em class="sig-param"><span class="n">r</span></em>, <em class="sig-param"><span class="n">ergodic</span></em>, <em class="sig-param"><span class="n">Laplace</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">df_save_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">df_file_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">save_as_text</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">save_as_df</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_corr</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_msd</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">plot_G</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dlsmicro/analyze_replicates.html#analyze_replicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dlsmicro.analyze_replicates.analyze_replicates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analyze files exported from Zetasizer software for multiple
+conditions and plot data per replicate of a condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csv_name</strong> (<em>str</em>) – Name of every csv file (all the same name)</p></li>
+<li><p><strong>root_folder</strong> (<em>str</em>) – Name of folder in which all files to be probed are</p></li>
+<li><p><strong>replicates</strong> (<em>list of ints</em>) – List of ints corresponding to the replicate number</p></li>
+<li><p><strong>T</strong> (<em>float</em>) – Temperature of the experiment in Kelvin</p></li>
+<li><p><strong>r</strong> (<em>float</em>) – Radius of particle in experiment in nanometers</p></li>
+<li><p><strong>ergodic</strong> (<em>boolean</em>) – Ergodicity in experiment</p></li>
+<li><p><strong>Laplace</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, use direct Laplace transform to find
+shear modulus. This is useful because it can
+smooth the data to noise.</p></li>
+<li><p><strong>df_save_path</strong> (str, <cite>optional</cite>) – Path to Dataframe to be saved containing results
+from DLS microrheology analysis.
+If <cite>None</cite>, path will be set to root_folder.</p></li>
+<li><p><strong>df_file_name</strong> (str, <cite>optional</cite>) – Name of Dataframe to be saved containing results
+from DLS microrheology analysis.
+If None, <cite>condition_data.pkl</cite> is default name</p></li>
+<li><p><strong>save_as_text</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, save each element of Dataframe separately
+as a text file</p></li>
+<li><p><strong>save_as_df</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, save the Dataframe</p></li>
+<li><p><strong>plot_corr</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, show plot of the correlation function of
+each replicate</p></li>
+<li><p><strong>plot_msd</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, show plot of the mean-squared displacement
+of each replicate</p></li>
+<li><p><strong>plot_G</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, show plot of the shear modulus of each replicate</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pam Cai, Brad Krajina
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

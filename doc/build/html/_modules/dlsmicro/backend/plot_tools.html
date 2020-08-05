@@ -1,0 +1,421 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dlsmicro.backend.plot_tools &mdash; DLSuR 0.0.5+0.g87f95e1.dirty documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DLSuR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.5+0.g87f95e1.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DLSuR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dlsmicro.backend.plot_tools</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dlsmicro.backend.plot_tools</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<div class="viewcode-block" id="df_to_matrix"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.plot_tools.html#dlsmicro.backend.plot_tools.df_to_matrix">[docs]</a><span class="k">def</span> <span class="nf">df_to_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">quantity</span><span class="p">,</span> <span class="n">replicate_identifier</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot; Construct a matrix from a Dataframe for a given vector-valued </span>
+<span class="sd">	quantity in which each vector replicate is labeled by a unique </span>
+<span class="sd">	replicate identifier.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : DataFrame</span>
+<span class="sd">         Dataframe containing table of results from DLS microrheology</span>
+<span class="sd">         analysis for a single condition</span>
+<span class="sd">    quantity : str</span>
+<span class="sd">          	   Name of variable to plot as defined in the Dataframe</span>
+<span class="sd">   	replicate_identifier : str</span>
+<span class="sd">   				 		   Name of quantity to average over</span>
+
+<span class="sd">   	Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    M : 2-d array</span>
+<span class="sd">        Matrix where each row is a replicate of the vector quantity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Construct a matrix in which each row represents a frequency sweep</span>
+	<span class="n">ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">replicate_identifier</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+	<span class="n">M_list</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">list_len</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+	    <span class="n">xi</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">replicate_identifier</span><span class="p">]</span> <span class="o">==</span> <span class="n">idx</span><span class="p">][</span><span class="n">quantity</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+	    <span class="n">list_len</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xi</span><span class="p">))</span>
+	    <span class="n">M_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+    <span class="c1"># Ensure all rows are the same length</span>
+	<span class="n">limit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">list_len</span><span class="p">))</span>
+	<span class="n">M_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">limit</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">M_list</span><span class="p">)</span>
+	<span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">M_list</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">M</span></div>
+
+<div class="viewcode-block" id="bootstrap_matrix_byrows"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.plot_tools.html#dlsmicro.backend.plot_tools.bootstrap_matrix_byrows">[docs]</a><span class="k">def</span> <span class="nf">bootstrap_matrix_byrows</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">n_bootstrap</span><span class="p">,</span> <span class="n">estimator</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot; Gets bootstrap samples of an estimator for frequency (or time)</span>
+<span class="sd">	sweep data from a matrix containing all vectors for a given quantity</span>
+<span class="sd">	over all replicates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    M : 2-d array</span>
+<span class="sd">        Matrix of all values for a given quantity over all replicates</span>
+<span class="sd">   	n_bootstrap : int</span>
+<span class="sd">   				  Number of points for bootstrap</span>
+<span class="sd">    estimator : callable function</span>
+<span class="sd">    			Function for evaluating center of distribution</span>
+
+<span class="sd">   	Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    M_bootstrap : 2-d array</span>
+<span class="sd">        	 	  Matrix in which each row represents a frequency sweep</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+	<span class="n">n_rep</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="n">M_bootstrap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_bootstrap</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+	<span class="n">M_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bootstrap</span><span class="p">):</span>
+	    <span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_rep</span><span class="p">,</span> <span class="n">n_rep</span><span class="p">)</span>
+	    <span class="n">M_sample</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="n">inds</span><span class="p">,</span> <span class="p">:]</span>
+	    <span class="n">M_bootstrap</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">estimator</span><span class="p">(</span><span class="n">M_sample</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">M_bootstrap</span></div>
+
+<div class="viewcode-block" id="bootstrap_freq_sweep"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.plot_tools.html#dlsmicro.backend.plot_tools.bootstrap_freq_sweep">[docs]</a><span class="k">def</span> <span class="nf">bootstrap_freq_sweep</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">quantity</span><span class="p">,</span> <span class="n">replicate_identifier</span><span class="p">,</span>
+                         <span class="n">n_bootstrap</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot; Gets bootstrap samples of an estimator for frequency (or time)</span>
+<span class="sd">	sweep data from a Dataframe. The Dataframe is assumed to contain a </span>
+<span class="sd">	vector for a given quantity in which each vector replicate is </span>
+<span class="sd">	labeled by a unique replicate identifier.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : DataFrame</span>
+<span class="sd">         Dataframe containing table of results from DLS microrheology</span>
+<span class="sd">         analysis for a single condition</span>
+<span class="sd">    quantity : str</span>
+<span class="sd">          	   Name of variable to plot as defined in the Dataframe</span>
+<span class="sd">   	replicate_identifier : str</span>
+<span class="sd">   				 		   Name of quantity to average over</span>
+<span class="sd">   	n_bootstrap : int</span>
+<span class="sd">   				  Number of points for bootstrap</span>
+<span class="sd">    estimator : callable function</span>
+<span class="sd">    			Function for evaluating center of distribution</span>
+
+<span class="sd">   	Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    M_bootstrap : 2-d array</span>
+<span class="sd">        	 	  Matrix in which each row represents a frequency sweep</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+	<span class="n">ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">replicate_identifier</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+	<span class="n">M_list</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">list_len</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+	    <span class="n">xi</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">replicate_identifier</span><span class="p">]</span> <span class="o">==</span> <span class="n">idx</span><span class="p">][</span><span class="n">quantity</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+	    <span class="n">list_len</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xi</span><span class="p">))</span>
+	    <span class="n">M_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span> 
+	<span class="n">limit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">list_len</span><span class="p">))</span>
+	<span class="n">M_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">limit</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">M_list</span><span class="p">)</span>
+	<span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">M_list</span><span class="p">)</span>
+
+    <span class="c1"># Get a matrix of bootstrapped row-wise averages given by the estimator</span>
+	<span class="n">M_bootstrap</span> <span class="o">=</span> <span class="n">bootstrap_matrix_byrows</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">n_bootstrap</span><span class="p">,</span> <span class="n">estimator</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">M_bootstrap</span></div>
+
+<div class="viewcode-block" id="bootstrap_freq_sweep_ci"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.plot_tools.html#dlsmicro.backend.plot_tools.bootstrap_freq_sweep_ci">[docs]</a><span class="k">def</span> <span class="nf">bootstrap_freq_sweep_ci</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">quantity</span><span class="p">,</span> <span class="n">replicate_identifier</span><span class="p">,</span>
+                            <span class="n">n_bootstrap</span><span class="p">,</span> <span class="n">ci</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot; Gets bootstrap confidence interval for an estimator of</span>
+<span class="sd">	frequency sweep (or time sweep) data. Boot strap can be either a </span>
+<span class="sd">	percentile bootstrap of an estimator of a studentized bootstrap</span>
+<span class="sd">	of the mean</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : DataFrame</span>
+<span class="sd">         Dataframe containing table of results from DLS microrheology</span>
+<span class="sd">         analysis for a single condition</span>
+<span class="sd">    quantity : str</span>
+<span class="sd">          	   Name of variable to plot as defined in the Dataframe</span>
+<span class="sd">   	replicate_identifier : str</span>
+<span class="sd">   				 		   Name of quantity to average over</span>
+<span class="sd">   	n_bootstrap : int</span>
+<span class="sd">   				  Number of points for bootstrap</span>
+<span class="sd">   	ci : float</span>
+<span class="sd">   		 Percent of distribution included in error bars</span>
+<span class="sd">    estimator : callable function, `optional`</span>
+<span class="sd">    			Function for evaluating center of distribution</span>
+<span class="sd">    </span>
+<span class="sd">   	Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ci_low : 1-d array</span>
+<span class="sd">        	 Vector of the lower bound of the confidence interval over </span>
+<span class="sd">        	 entire frequency range.</span>
+<span class="sd">    ci_high : 1-d array</span>
+<span class="sd">			  Vector of the upper bound of the confidence interval</span>
+<span class="sd">			  over entire frequency range.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+	<span class="n">M_bootstrap</span> <span class="o">=</span> <span class="n">bootstrap_freq_sweep</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">quantity</span><span class="p">,</span> <span class="n">replicate_identifier</span><span class="p">,</span>
+                                       <span class="n">n_bootstrap</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">)</span>
+	<span class="n">ci_low</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">M_bootstrap</span><span class="p">,</span> <span class="mf">50.</span><span class="o">-</span><span class="n">ci</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+	<span class="n">ci_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">M_bootstrap</span><span class="p">,</span> <span class="mf">50.</span><span class="o">+</span><span class="n">ci</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">ci_low</span><span class="p">,</span> <span class="n">ci_high</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="plot_replicates_from_df"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.plot_tools.html#dlsmicro.backend.plot_tools.plot_replicates_from_df">[docs]</a><span class="k">def</span> <span class="nf">plot_replicates_from_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">my_quantity</span><span class="p">,</span> <span class="n">plot_ci</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">myci</span><span class="o">=</span><span class="mf">68.</span><span class="p">,</span> 
+							<span class="n">estimator</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> 
+							<span class="n">err_alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">err_lw</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+                            <span class="n">identifier</span><span class="o">=</span><span class="s1">&#39;replicate&#39;</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; Plot a given quantity from the Dataframe, averaging across</span>
+<span class="sd">    all replicates in that Dataframe.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : DataFrame</span>
+<span class="sd">         Dataframe containing table of results from DLS microrheology</span>
+<span class="sd">         analysis for a single condition</span>
+<span class="sd">    my_quantity : str</span>
+<span class="sd">          		  Name of variable to plot as defined in the Dataframe</span>
+<span class="sd">    plot_ci : boolean, `optional`</span>
+<span class="sd">        	  If `True`, plot error bars</span>
+<span class="sd">    myci : float, `optional`</span>
+<span class="sd">    	   Percent of distribution plotted in error bars </span>
+<span class="sd">   	estimator : callable function, `optional`</span>
+<span class="sd">   				Function for evaluating main plotted value</span>
+<span class="sd">   	color : str, `optional`</span>
+<span class="sd">   			Color of plotted line</span>
+<span class="sd">   	ls : str, `optional`</span>
+<span class="sd">   		 Linestyle of plotted line</span>
+<span class="sd">   	err_alpha : float, `optional`</span>
+<span class="sd">   				Transparency level of error bars</span>
+<span class="sd">   	err_lw : float, `optional`</span>
+<span class="sd">   			 Linewidth of error bar outlines</span>
+<span class="sd">   	identifier : str, `optional`</span>
+<span class="sd">   				 Name of quantity to average over</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">y_matrix</span> <span class="o">=</span> <span class="n">df_to_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">my_quantity</span><span class="p">,</span> <span class="n">identifier</span><span class="p">)</span>
+    <span class="n">replicates</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;replicate&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;replicate&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">replicates</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s1">&#39;omega&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">y_matrix</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">ci</span> <span class="o">=</span> <span class="n">bootstrap_freq_sweep_ci</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">my_quantity</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span>
+    	                         <span class="n">myci</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">)</span>
+    <span class="n">ci_low</span> <span class="o">=</span> <span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ci_high</span> <span class="o">=</span> <span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">y_mu</span> <span class="o">=</span> <span class="n">estimator</span><span class="p">(</span><span class="n">y_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">y_mu</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="n">ls</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">plot_ci</span><span class="p">:</span>
+    	<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ci_low</span><span class="p">,</span> <span class="n">ci_high</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+    		             <span class="n">alpha</span><span class="o">=</span><span class="n">err_alpha</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">err_lw</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="add_w_scaling"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.plot_tools.html#dlsmicro.backend.plot_tools.add_w_scaling">[docs]</a><span class="k">def</span> <span class="nf">add_w_scaling</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">scaling</span><span class="p">,</span> <span class="n">w_b</span><span class="p">,</span> <span class="n">placement</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot; Plot a given scaling on complex modulus plot to compared</span>
+<span class="sd">	against the complex modulus of a sample.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    omega : 1-d array</span>
+<span class="sd">    		Vector of frequency range covered by the complex modulus</span>
+<span class="sd">    		plotted in the plot</span>
+<span class="sd">    scaling : list of float</span>
+<span class="sd">          	  List of 2 floats, where the first number is numerator </span>
+<span class="sd">          	  of fraction and second is denominator of fraction</span>
+<span class="sd">    w_b : float</span>
+<span class="sd">          Value of complex modulus plotted where scaling should appear</span>
+<span class="sd">          on the plot</span>
+<span class="sd">    placement : list of float</span>
+<span class="sd">    	   		First element in list is lower bound of scaling line,</span>
+<span class="sd">    	   		second element in list is upper bound of scaling line,</span>
+<span class="sd">    	   		where both elements are values between 0 and 1. The </span>
+<span class="sd">    	   		value of the first element should be less than the value</span>
+<span class="sd">    	   		of the second element</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+	<span class="n">lolim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">*</span><span class="n">placement</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+	<span class="n">hilim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span><span class="o">*</span><span class="n">placement</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+	<span class="n">g_scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float_power</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">scaling</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">scaling</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">w_b</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">float_power</span><span class="p">(</span><span class="n">omega</span><span class="p">[</span><span class="n">lolim</span><span class="p">],</span> 
+		                     <span class="n">scaling</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">scaling</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega</span><span class="p">[</span><span class="n">lolim</span><span class="p">:</span><span class="n">hilim</span><span class="p">],</span> <span class="n">g_scale</span><span class="p">[</span><span class="n">lolim</span><span class="p">:</span><span class="n">hilim</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+	<span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="mf">0.6</span><span class="o">*</span><span class="p">(</span><span class="n">lolim</span><span class="o">+</span><span class="n">hilim</span><span class="p">))</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">omega</span><span class="p">[</span><span class="n">model</span><span class="p">],</span><span class="n">g_scale</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">*</span><span class="mf">1.6</span><span class="p">,</span>
+		     <span class="s1">&#39;$\omega^{</span><span class="si">%(top)s</span><span class="s1">/</span><span class="si">%(bot)s</span><span class="s1">}$&#39;</span><span class="o">%</span><span class="p">{</span><span class="s1">&#39;top&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">scaling</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+		     <span class="s1">&#39;bot&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">scaling</span><span class="p">[</span><span class="mi">1</span><span class="p">])},</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pam Cai, Brad Krajina
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

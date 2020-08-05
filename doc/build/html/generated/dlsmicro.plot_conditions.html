@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dlsmicro.plot_conditions &mdash; DLSuR 0.0.5+0.g87f95e1.dirty documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> DLSuR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.5+0.g87f95e1.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">dlsmicro.plot_conditions</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DLSuR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>dlsmicro.plot_conditions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/dlsmicro.plot_conditions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dlsmicro-plot-conditions">
+<span id="id1"></span><h1>dlsmicro.plot_conditions<a class="headerlink" href="#dlsmicro-plot-conditions" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-dlsmicro.plot_conditions"></span><dl class="py function">
+<dt id="dlsmicro.plot_conditions.plot_conditions">
+<code class="sig-prename descclassname">dlsmicro.plot_conditions.</code><code class="sig-name descname">plot_conditions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df_path</span></em>, <em class="sig-param"><span class="n">condition_dir</span></em>, <em class="sig-param"><span class="n">replicate_dict</span></em>, <em class="sig-param"><span class="n">cond_color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cond_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot_ci</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_G_replicates</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_alpha_replicates</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">plot_scattering</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">add_scaling</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">scaling_frac</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dlsmicro/plot_conditions.html#plot_conditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dlsmicro.plot_conditions.plot_conditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot DLS microrheology output data for
+multiple conditions after analysis and saving as dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_path</strong> (<em>str</em>) – Path to saved dataframe to plot</p></li>
+<li><p><strong>condition_dir</strong> (<em>dictionary</em>) – Dictionary of conditions and respective folders</p></li>
+<li><p><strong>cond_color</strong> (dictionary, <cite>optional</cite>) – Dictionary of conditions and respective color
+If <cite>None</cite>, colors are default colors</p></li>
+<li><p><strong>cond_label</strong> (dictionary, <cite>optional</cite>) – Dictionary of conditions and respective labels
+If <cite>None</cite>, labels are taken to be folder name</p></li>
+<li><p><strong>plot_ci</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, plot error bars around G and alpha</p></li>
+<li><p><strong>plot_G_replicates</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, plot G for all conditions averaged
+over all replicates</p></li>
+<li><p><strong>plot_alpha_replicates</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, plot alpha for all conditions
+averaged over all replicates</p></li>
+<li><p><strong>plot_scattering</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, plot scattering for all conditions</p></li>
+<li><p><strong>add_scaling</strong> (boolean, <cite>optional</cite>) – If <cite>True</cite>, add scaling defined by <cite>scaling_frac</cite> to plot</p></li>
+<li><p><strong>scaling_frac</strong> (list of float, <cite>optional</cite>) – List of 2 floats, where the first number is numerator
+of fraction and second is denominator of fraction</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pam Cai, Brad Krajina
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'dlsmicro'
+project = 'DLSuR'
 copyright = '2020, Pam Cai, Brad Krajina'
 author = 'Pam Cai, Brad Krajina'
 
@@ -114,7 +114,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'dlsmicrodoc'
+htmlhelp_basename = 'DLSuRdoc'
 
 # -- Manual extensions ------------------------------------------------------
 

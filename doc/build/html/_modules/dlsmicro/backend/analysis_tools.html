@@ -1,0 +1,627 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dlsmicro.backend.analysis_tools &mdash; DLSuR 0.0.5+0.g87f95e1.dirty documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DLSuR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.5+0.g87f95e1.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DLSuR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dlsmicro.backend.analysis_tools</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dlsmicro.backend.analysis_tools</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Module for processing DLS correlation data into rheological properties&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">dlsmicro.backend.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">special</span>
+<span class="kn">import</span> <span class="nn">dlsmicro.backend.fit_funcs</span> <span class="k">as</span> <span class="nn">fit_funcs</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="find_g0"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.analysis_tools.html#dlsmicro.backend.analysis_tools.find_g0">[docs]</a><span class="k">def</span> <span class="nf">find_g0</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">fit_funcs</span><span class="o">.</span><span class="n">stretched_exp</span><span class="p">,</span> <span class="n">t0</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+            <span class="n">tmaxs</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">40.</span><span class="p">,</span> <span class="mf">130.</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">p0</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Estimate the intercept of the correlation function at t = 0</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t  : 1d-array</span>
+<span class="sd">         Vector of time-lags at which the correlation coefficient is computed</span>
+<span class="sd">    corr : 1d-array</span>
+<span class="sd">         Correlation coefficient (which spans possible from 0.0 to 1.0).</span>
+<span class="sd">         Note that this is equal to `g2 - 1`, where `g2` is the intensity</span>
+<span class="sd">         autocorrelation function.</span>
+<span class="sd">    func : callable function</span>
+<span class="sd">           Model to fit the correlation against. Must be of the form</span>
+<span class="sd">           `f(t, p1, p2, ..., pM)` where `t` is the independent variable and</span>
+<span class="sd">           `p1, p2, ..., pM` is a set of M parameters to fit.</span>
+<span class="sd">    t0: float, `optional`</span>
+<span class="sd">        Minimum time-lag to use in the fit of the correlation coefficient</span>
+<span class="sd">        for estimating the intercept.</span>
+<span class="sd">    tmaxs : 1-d array or list of floats, `optional`</span>
+<span class="sd">           Vector of possible maximum time-lags to use in the fitting interval</span>
+<span class="sd">           of the correlation coefficient. The optimal tmax will be selected</span>
+<span class="sd">           based on minimization of the cross-validation error of the fit.</span>
+<span class="sd">    p0 : 1-d array, `optional`</span>
+<span class="sd">         Initial guesses for the parameters to ``func`` for fitting</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    g0 : float</span>
+<span class="sd">         Estimate of the intercept of ``corr`` at `t=0`</span>
+<span class="sd">    twindow_min : List of floats</span>
+<span class="sd">                  Optimized interval in time over which the fit to ``corr``</span>
+<span class="sd">                  was performed to obtain g0. This is a list</span>
+<span class="sd">                  of the form [t0, tmax].</span>
+<span class="sd">    pmin : 1d-array</span>
+<span class="sd">           Optimal values for the fitting parameters to ``func`` used to</span>
+<span class="sd">           estimate ``g0``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Construct list of fitting windows</span>
+    <span class="n">twindows</span> <span class="o">=</span> <span class="p">[[</span><span class="n">t0</span><span class="p">,</span> <span class="n">tmax</span><span class="p">]</span> <span class="k">for</span> <span class="n">tmax</span> <span class="ow">in</span> <span class="n">tmaxs</span><span class="p">]</span>
+    <span class="c1"># Find twindow for minimum CV error</span>
+    <span class="p">[</span><span class="n">twindow_min</span><span class="p">,</span> <span class="n">pmin</span><span class="p">,</span> <span class="n">CV_min</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">minimize_cv_error</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">twindows</span><span class="p">,</span>
+                                                          <span class="n">func</span><span class="p">,</span> <span class="n">p0</span><span class="p">)</span>
+    <span class="n">g0</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">*</span><span class="n">pmin</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">g0</span><span class="p">,</span> <span class="n">twindow_min</span><span class="p">,</span> <span class="n">pmin</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="calc_g1"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.analysis_tools.html#dlsmicro.backend.analysis_tools.calc_g1">[docs]</a><span class="k">def</span> <span class="nf">calc_g1</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">ergodic</span><span class="p">,</span> <span class="n">g0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Ip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Ie</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the intermediate scattering function from the correlation function.</span>
+
+<span class="sd">    This function transforms the correlation functio to the intermediate </span>
+<span class="sd">    scattering function, which is necessary for computing the particle MSD.</span>
+<span class="sd">    The function enables corrections for broken-ergodicty and estimation</span>
+<span class="sd">    of the zero-time intercept of the correlation function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t  : 1d-array</span>
+<span class="sd">         Vector of time-lags at which the correlation function is computed</span>
+<span class="sd">    corr : 1d-array</span>
+<span class="sd">         Correlation coefficient (which spans possible from 0.0 to 1.0).</span>
+<span class="sd">         Note that this is equal to `g2 - 1`, where `g2` is the intensity</span>
+<span class="sd">         autocorrelation function.</span>
+<span class="sd">    ergodic: boolean</span>
+<span class="sd">             If False, corrections are made for non-ergodic systems</span>
+<span class="sd">             based on ``Ip`` and ``Ie``</span>
+<span class="sd">    Ip : float</span>
+<span class="sd">        Scattering intensity at the position</span>
+<span class="sd">        where correlation function is collected.</span>
+<span class="sd">        (Only used if ``ergodic=False``)</span>
+<span class="sd">    Ie : 1d-array</span>
+<span class="sd">        Vector of scattering intensities at different positions in the cuvette</span>
+<span class="sd">        (Only used if ``ergodic=False``)</span>
+<span class="sd">    g0 : float, `optional`</span>
+<span class="sd">         Estimate of the intercept of ``g2 - 1`` at time 0. If not provided,</span>
+<span class="sd">         the intercept will be estimated automatically based on a stretched</span>
+<span class="sd">         exponential fit.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    g1 : 1d-array</span>
+<span class="sd">        The intermediate scattering function corresponding to</span>
+<span class="sd">        the time-lags ``t``</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The correlation function exported by the Zetasizer software is equal to</span>
+<span class="sd">    ``g2 - 1``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">g2</span> <span class="o">=</span> <span class="n">corr</span> <span class="o">+</span> <span class="mf">1.</span>
+
+    <span class="c1"># If no intercept is provided, estimate it using a stretched exponential</span>
+    <span class="c1"># function with default parameters</span>
+
+    <span class="k">if</span> <span class="n">g0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Define guesses for the stretched exponential function fitting</span>
+        <span class="n">a0</span> <span class="o">=</span> <span class="mf">1.0e-2</span>
+        <span class="n">beta0</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">p0</span> <span class="o">=</span> <span class="p">[</span><span class="n">corr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">a0</span><span class="p">,</span> <span class="n">beta0</span><span class="p">]</span>
+        <span class="c1"># Fit the correlation and get the intercept</span>
+        <span class="p">[</span><span class="n">g0</span><span class="p">,</span> <span class="n">twindow_min</span><span class="p">,</span> <span class="n">pmin</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_g0</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">fit_funcs</span><span class="o">.</span><span class="n">stretched_exp</span><span class="p">,</span> <span class="n">t0</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+                     <span class="n">tmaxs</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">40.</span><span class="p">,</span> <span class="mf">130.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">),</span> <span class="n">p0</span><span class="o">=</span><span class="n">p0</span><span class="p">)</span>
+    
+    <span class="c1"># If any of the g values are greater than g0, allow</span>
+    <span class="c1"># g2 to be replaced with the fit to avoid negative</span>
+    <span class="c1"># MSD values</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">corr</span> <span class="o">&gt;</span> <span class="n">g0</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Negative values encountered in MSD...&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Replacing early time data with gfit&#39;</span><span class="p">)</span>
+    <span class="n">tmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">twindow_min</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">tmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">twindow_min</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">gfit</span> <span class="o">=</span> <span class="n">fit_funcs</span><span class="o">.</span><span class="n">stretched_exp</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="o">*</span><span class="n">pmin</span><span class="p">)</span>
+    <span class="n">g2</span><span class="p">[</span><span class="n">tmin</span><span class="p">:</span><span class="n">tmax</span><span class="p">]</span> <span class="o">=</span> <span class="n">gfit</span><span class="p">[</span><span class="n">tmin</span><span class="p">:</span><span class="n">tmax</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.</span>
+
+    <span class="k">if</span> <span class="n">ergodic</span><span class="p">:</span>
+        <span class="n">g1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">g2</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span><span class="o">/</span><span class="n">g0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Ie_avg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">Ie</span><span class="p">)</span>
+        <span class="c1"># calculate the ratio of ensemble to time averaged</span>
+        <span class="c1"># intensities</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">Ie_avg</span><span class="o">/</span><span class="n">Ip</span>
+        <span class="c1"># calculate the g1 correlation function</span>
+        <span class="k">if</span> <span class="n">eps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">g1</span> <span class="o">=</span> <span class="p">(</span><span class="n">Y</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span><span class="o">/</span><span class="n">Y</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">g2</span><span class="o">-</span><span class="n">g0</span><span class="p">)</span><span class="o">/</span><span class="n">Y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">g1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">eps</span><span class="p">)</span><span class="o">/</span><span class="n">Y</span> <span class="o">+</span>
+                  <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">eps</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span> <span class="o">+</span>
+                                  <span class="p">(</span><span class="n">g2</span><span class="o">-</span><span class="n">g0</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">eps</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">/</span><span class="n">Y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">g1</span></div>
+
+
+<div class="viewcode-block" id="calc_q"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.analysis_tools.html#dlsmicro.backend.analysis_tools.calc_q">[docs]</a><span class="k">def</span> <span class="nf">calc_q</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Calculate the scattering wave-vector.</span>
+
+<span class="sd">    This function returns the scattering wave-vector for a DLS experiment</span>
+<span class="sd">    based on the scattering geometry and the wave-length of the laser.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n : float</span>
+<span class="sd">        Index of refraction of the material (1.333 for water)</span>
+<span class="sd">    theta : float</span>
+<span class="sd">            Scattering angle in radians</span>
+<span class="sd">    lam : float</span>
+<span class="sd">          wave-length of laser (units used here determine the</span>
+<span class="sd">          units of ``q``)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    q : float</span>
+<span class="sd">        Scattering wave-vector in inverse units of ``1/lam``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="mf">4.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">q</span></div>
+
+
+<div class="viewcode-block" id="msd_local_pwr_law"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.analysis_tools.html#dlsmicro.backend.analysis_tools.msd_local_pwr_law">[docs]</a><span class="k">def</span> <span class="nf">msd_local_pwr_law</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">bw</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">replace_neg</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Calculate the local power-law scaling of the MSD and the</span>
+<span class="sd">        smoothed MSD by locally-weighted logarithmic linear regression</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t : 1d-array</span>
+<span class="sd">        Vector of time-lags</span>
+<span class="sd">    g1 : 1d-array</span>
+<span class="sd">         Vector containing the intermediate scattering function at time-lags</span>
+<span class="sd">         given by ``t``</span>
+<span class="sd">    q : float</span>
+<span class="sd">        Scattering vector in units of 1/nm</span>
+<span class="sd">    bw : float, `optional`</span>
+<span class="sd">           Bandwith smoothing parameter for locally-weighted regression.</span>
+<span class="sd">           Reasonable values are typically between 0.05 and 0.1</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    msd_smooth: 1d-array</span>
+<span class="sd">                Vector of smoothed MSD values from the local regression</span>
+<span class="sd">                corresponding to the time lags in ``t`` (in units of nm^2).</span>
+<span class="sd">    alpha: 1d-array</span>
+<span class="sd">           Vector of local power-law scaling exponents of the MSD</span>
+<span class="sd">           corresponding to the time lags in ``t``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msd</span> <span class="o">=</span> <span class="o">-</span><span class="mi">6</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">g1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">q</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span>
+
+    <span class="c1"># Remove data points with 0, negative, or infinite MSD</span>
+    <span class="k">if</span> <span class="n">replace_neg</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">msd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;negative msd values enountered,&#39;</span>
+                  <span class="s1">&#39;replacing with interpolation&#39;</span><span class="p">)</span>
+            <span class="n">neg_inds</span> <span class="o">=</span> <span class="n">msd</span> <span class="o">&lt;</span> <span class="mi">0</span>
+            <span class="n">t_pos</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">msd</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">msd_pos</span> <span class="o">=</span> <span class="n">msd</span><span class="p">[</span><span class="n">msd</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">t_neg</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">neg_inds</span><span class="p">]</span>
+            <span class="n">msd_interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">t_neg</span><span class="p">,</span> <span class="n">t_pos</span><span class="p">,</span> <span class="n">msd_pos</span><span class="p">)</span>
+            <span class="n">msd</span><span class="p">[</span><span class="n">neg_inds</span><span class="p">]</span> <span class="o">=</span> <span class="n">msd_interp</span>
+
+    <span class="c1"># Perform a locally-weighted logarithmic linear regression</span>
+    <span class="p">[</span><span class="n">Theta</span><span class="p">,</span> <span class="n">log_msd_smooth</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">loess</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">msd</span><span class="p">),</span>
+                                          <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">bw</span><span class="p">)</span>
+    <span class="n">msd_smooth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_msd_smooth</span><span class="p">)</span>
+    <span class="c1"># Define the local power law scaling exponent based</span>
+    <span class="c1"># on the logarithmic slopes</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">Theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">msd_smooth</span><span class="p">,</span> <span class="n">alpha</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="calc_msd_raw"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.analysis_tools.html#dlsmicro.backend.analysis_tools.calc_msd_raw">[docs]</a><span class="k">def</span> <span class="nf">calc_msd_raw</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">replace_neg</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Calculate the MSD from the intermediate scattering function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t : 1d-array</span>
+<span class="sd">        Vector of time-lags</span>
+<span class="sd">    g1 : 1d-array</span>
+<span class="sd">         Vector containing the intermediate scattering function at time-lags</span>
+<span class="sd">         ``t``</span>
+<span class="sd">    q : float</span>
+<span class="sd">        Scattering vector in units of 1/nm</span>
+<span class="sd">    replace_neg : boolean, `optional`</span>
+<span class="sd">                  If ``True``, replace negative values of the MSD by linear</span>
+<span class="sd">                  interpolation</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    msd : 1d-array</span>
+<span class="sd">          Vector of mean-squared-displacements at time-lags ``t``</span>
+<span class="sd">          (in units of nm^2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msd</span> <span class="o">=</span> <span class="mi">6</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">g1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">q</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span>
+
+    <span class="c1"># Remove data points with 0, negative, or infinite MSD</span>
+    <span class="k">if</span> <span class="n">replace_neg</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">msd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;negative msd values enountered,&#39;</span>
+                  <span class="s1">&#39;replacing with interpolation&#39;</span><span class="p">)</span>
+            <span class="n">neg_inds</span> <span class="o">=</span> <span class="n">msd</span> <span class="o">&lt;</span> <span class="mi">0</span>
+            <span class="n">t_pos</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">msd</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">msd_pos</span> <span class="o">=</span> <span class="n">msd</span><span class="p">[</span><span class="n">msd</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">t_neg</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">neg_inds</span><span class="p">]</span>
+            <span class="n">msd_interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">t_neg</span><span class="p">,</span> <span class="n">t_pos</span><span class="p">,</span> <span class="n">msd_pos</span><span class="p">)</span>
+            <span class="n">msd</span><span class="p">[</span><span class="n">neg_inds</span><span class="p">]</span> <span class="o">=</span> <span class="n">msd_interp</span>
+
+    <span class="k">return</span> <span class="n">msd</span></div>
+
+
+<div class="viewcode-block" id="shear_modulus"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.analysis_tools.html#dlsmicro.backend.analysis_tools.shear_modulus">[docs]</a><span class="k">def</span> <span class="nf">shear_modulus</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">msd</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Calculate Frequency-dependent shear modulus by power-law analysis </span>
+
+<span class="sd">    Calculate the frequency-dependent complex shear modulus using results</span>
+<span class="sd">    from a power-law analysis of the mean-squared-displacement. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t : 1d-array</span>
+<span class="sd">        Time-lags in units of microseconds</span>
+<span class="sd">    msd : 1d-array</span>
+<span class="sd">          Mean-squared displacements at the time-lags</span>
+<span class="sd">          ``t`` in units of nm^2</span>
+<span class="sd">    alpha : 1d-array of local power-law scaling exponents</span>
+<span class="sd">    r : float</span>
+<span class="sd">        Radius of the probe particles in nanometers</span>
+<span class="sd">    T : float</span>
+<span class="sd">        Temperature in Kelvin</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    omega : 1d-array</span>
+<span class="sd">            Vector of angular frequencies in units of 1/s</span>
+<span class="sd">    G1 : 1d-array</span>
+<span class="sd">         Storage modulus at angular frequencies ``omega`` in</span>
+<span class="sd">         units of Pa</span>
+<span class="sd">    G2 : 1d-array</span>
+<span class="sd">         Loss modulus at angular frequencies ``omega`` in</span>
+<span class="sd">         units of Pa</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This method produces more accurate results in the upper and</span>
+<span class="sd">    lower frequency extremes than a direct numerical Laplace</span>
+<span class="sd">    or Fourier transform.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Boltzman constant</span>
+    <span class="n">kb</span> <span class="o">=</span> <span class="mf">1.38e-23</span>
+    <span class="c1"># magnitude of the modulus</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="p">(</span><span class="n">msd</span><span class="o">**-</span><span class="mf">1.</span><span class="p">)</span><span class="o">*</span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">special</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">alpha</span><span class="p">))</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">kb</span><span class="o">*</span><span class="n">T</span><span class="o">*</span><span class="p">(</span><span class="mf">1.e27</span><span class="p">)</span><span class="o">*</span><span class="n">G</span>
+    <span class="c1"># Storage G1 and loss G2 moduli</span>
+    <span class="n">G1</span> <span class="o">=</span> <span class="n">G</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">alpha</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+    <span class="n">G2</span> <span class="o">=</span> <span class="n">G</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">alpha</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+    <span class="c1"># Calculate omega</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">t</span><span class="o">**-</span><span class="mf">1.</span>
+    <span class="c1"># Convert omega to 1/s</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">omega</span><span class="o">*</span><span class="p">(</span><span class="mf">1.e6</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">omega</span><span class="p">,</span> <span class="n">G1</span><span class="p">,</span> <span class="n">G2</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="shear_modulus_laplace_transform"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.analysis_tools.html#dlsmicro.backend.analysis_tools.shear_modulus_laplace_transform">[docs]</a><span class="k">def</span> <span class="nf">shear_modulus_laplace_transform</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">msd</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">bw</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Calculate the shear modulus by direct laplace transform of the MSD</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t : 1d-array</span>
+<span class="sd">        Time-lags in units of microseconds</span>
+<span class="sd">    msd : 1d-array</span>
+<span class="sd">          Mean-squared displacements at the time-lags</span>
+<span class="sd">          ``t`` in units of nm^2</span>
+<span class="sd">    r : float</span>
+<span class="sd">        Radius of the probe particles in nanometers</span>
+<span class="sd">    T : float</span>
+<span class="sd">        Temperature in Kelvin</span>
+<span class="sd">    bw : float, optional</span>
+<span class="sd">         Bandwith parameter for analytic continuation of</span>
+<span class="sd">         the laplace transform into fourier space by locally weighted</span>
+<span class="sd">         regression</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    omega : 1d-array</span>
+<span class="sd">            Vector of angular frequencies in units of 1/s</span>
+<span class="sd">    G1 : 1d-array</span>
+<span class="sd">         Storage modulus at angular frequencies ``omega`` in</span>
+<span class="sd">         units of Pa</span>
+<span class="sd">    G2 : 1d-array</span>
+<span class="sd">         Loss modulus at angular frequencies ``omega`` in</span>
+<span class="sd">         units of Pa</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function returns the shear modulus in the Fourier (omega) domain</span>
+<span class="sd">    by first transforming to the Laplace (s) domain and then performing</span>
+<span class="sd">    analytic continuation onto the imaginary axis in the complex plane.</span>
+
+<span class="sd">    This method produces erroneous results in the upper and lower frequency</span>
+<span class="sd">    extremes (roughly the first and last decade of frequencies).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Boltzman constant</span>
+    <span class="n">kb</span> <span class="o">=</span> <span class="mf">1.38e-23</span>
+    <span class="c1"># Calculate the direct laplace transform of the mean-squared displacement</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">**-</span><span class="mf">1.</span>
+    <span class="n">msd_laplace</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">laplace</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">msd</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="c1"># Calculate the G*s in laplace space</span>
+    <span class="n">Gs</span> <span class="o">=</span> <span class="p">(</span><span class="n">msd_laplace</span><span class="o">**-</span><span class="mf">1.</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r</span><span class="p">)</span>
+    <span class="c1"># Perform a local power-law analysis of the laplace space shear modulus</span>
+    <span class="p">[</span><span class="n">Theta</span><span class="p">,</span> <span class="n">logGs</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">loess</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Gs</span><span class="p">),</span> <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">bw</span><span class="p">)</span>
+    <span class="c1"># Calculate the local scaling exponent</span>
+    <span class="n">alpha_direct</span> <span class="o">=</span> <span class="n">Theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="c1"># Calculate the magnitude of the shear modulus</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logGs</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">s</span><span class="o">**-</span><span class="mf">1.</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">kb</span><span class="o">*</span><span class="n">T</span><span class="o">*</span><span class="p">(</span><span class="mf">1.e27</span><span class="p">)</span><span class="o">*</span><span class="n">G</span>
+    <span class="c1"># Calculate the real and imaginary compoments</span>
+    <span class="n">G2</span> <span class="o">=</span> <span class="o">-</span><span class="n">G</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">alpha_direct</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+    <span class="n">G1</span> <span class="o">=</span> <span class="n">G</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">alpha_direct</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+    <span class="c1"># Calculate omega from t</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">t</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
+    <span class="c1"># Convert omega to 1/s</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">omega</span><span class="o">*</span><span class="p">(</span><span class="mf">1.e6</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">omega</span><span class="p">,</span> <span class="n">G1</span><span class="p">,</span> <span class="n">G2</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="full_dlsur_analysis"><a class="viewcode-back" href="../../../generated/dlsmicro.backend.analysis_tools.html#dlsmicro.backend.analysis_tools.full_dlsur_analysis">[docs]</a><span class="k">def</span> <span class="nf">full_dlsur_analysis</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">ergodic</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">Ip</span><span class="p">,</span> <span class="n">Ie</span><span class="p">,</span>
+                        <span class="n">calc_g1_kws</span><span class="o">=</span><span class="p">{},</span> <span class="n">pwr_law_kws</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="sd">&quot;&quot;&quot; Perform a full microrheology analysis from the correlation function.</span>
+
+<span class="sd">    This function returns a table reporting particle motion statistics</span>
+<span class="sd">    and the material shear modulus, beginning with the correlation</span>
+<span class="sd">    coefficient. It implicitly calculates the intercept of the correlation</span>
+<span class="sd">    function and a power-law analysis of the MSD to perform an algebraic</span>
+<span class="sd">    calculation of the shear modulus. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    t : 1d-array</span>
+<span class="sd">        Vector of lag-times (in microseconds)</span>
+<span class="sd">    corr : 1d-array</span>
+<span class="sd">           Vector of values of the correlation coefficient, corresponding</span>
+<span class="sd">           to the time-lags ``t``.</span>
+<span class="sd">    ergodic : boolean</span>
+<span class="sd">              If ``ergodic==False`` then corrections are applied to the</span>
+<span class="sd">              calculation of `g1`, based on ``Ip`` and ``Ie``</span>
+<span class="sd">    r : float</span>
+<span class="sd">        Particle radius in nanometers</span>
+<span class="sd">    T : float</span>
+<span class="sd">        Temperature in Kelvin</span>
+<span class="sd">    q : float</span>
+<span class="sd">        Scattering vector in 1/nm</span>
+<span class="sd">    Ip : float, `optional`</span>
+<span class="sd">         Scattering intensity at the meausurement position where ``corr``</span>
+<span class="sd">         is collected</span>
+<span class="sd">    Ie : 1d-array</span>
+<span class="sd">        Vector of scattering intensities at different measurement positions</span>
+<span class="sd">        in the cuvette</span>
+<span class="sd">    calc_g1_kws : dictionary, `optional`</span>
+<span class="sd">                  Dictionary of keyword arguments to pass to</span>
+<span class="sd">                  ``analysis.tools.calc_g1()`` for computing the</span>
+<span class="sd">                  intermediate scattering function</span>
+<span class="sd">    pwr_law_kws : dictionary, `optional`</span>
+<span class="sd">                  Dictionary of keyword arguments to pass to</span>
+<span class="sd">                  ``analysis_tools.msd_local_pwr_law()`` for local</span>
+<span class="sd">                  power-law analysis of the msd</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dlsmicro_df : DataFrame</span>
+<span class="sd">                  Dataframe containing table of results from DLS microrheology</span>
+<span class="sd">                  analysis</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Find the intermediate scattering function</span>
+    <span class="n">g1</span> <span class="o">=</span> <span class="n">calc_g1</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">corr</span><span class="p">,</span> <span class="n">ergodic</span><span class="p">,</span> <span class="n">Ip</span><span class="o">=</span><span class="n">Ip</span><span class="p">,</span> <span class="n">Ie</span><span class="o">=</span><span class="n">Ie</span><span class="p">,</span> <span class="o">**</span><span class="n">calc_g1_kws</span><span class="p">)</span>
+
+    <span class="c1"># Calculate the power-law smoothing of the msd</span>
+    <span class="p">[</span><span class="n">msd_smooth</span><span class="p">,</span> <span class="n">alpha</span><span class="p">]</span> <span class="o">=</span> <span class="n">msd_local_pwr_law</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">g1</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span>
+                                            <span class="o">**</span><span class="n">pwr_law_kws</span><span class="p">)</span>
+
+    <span class="c1"># Calculate the shear modulus from the power-law smoothing</span>
+    <span class="p">[</span><span class="n">omega</span><span class="p">,</span> <span class="n">G1</span><span class="p">,</span> <span class="n">G2</span><span class="p">]</span> <span class="o">=</span> <span class="n">shear_modulus</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">msd_smooth</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+
+    <span class="n">dlsmicro_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;msd_smooth&#39;</span><span class="p">:</span> <span class="n">msd_smooth</span><span class="p">,</span>
+                     <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">alpha</span><span class="p">,</span> <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="n">omega</span><span class="p">,</span>
+                     <span class="s1">&#39;G1&#39;</span><span class="p">:</span> <span class="n">G1</span><span class="p">,</span> <span class="s1">&#39;G2&#39;</span><span class="p">:</span> <span class="n">G2</span><span class="p">}</span>
+    <span class="n">dlsmicro_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dlsmicro_dict</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dlsmicro_df</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pam Cai, Brad Krajina
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
