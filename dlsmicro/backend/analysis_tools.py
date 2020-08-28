@@ -353,19 +353,18 @@ def shear_modulus_laplace_transform(t, msd, r, T, bw=0.01):
     s = t**-1.
     msd_laplace = utils.laplace(t, msd, s)
     # Calculate the G*s in laplace space
-    Gs = (msd_laplace**-1.)/(np.pi*r)
+    Gs = (msd_laplace**-1.)/(np.pi*r*s)
     # Perform a local power-law analysis of the laplace space shear modulus
     [Theta, logGs] = utils.loess(np.log(s), np.log(Gs), degree=1, alpha=bw)
     # Calculate the local scaling exponent
     alpha_direct = Theta[1, :]
-    # Calculate the magnitude of the shear modulus
-    G = np.exp(logGs)*(s**-1.)
+    G = np.exp(logGs)
     G = kb*T*(1.e27)*G
-    # Calculate the real and imaginary compoments
-    G2 = -G*np.cos(np.pi*alpha_direct/2.)
-    G1 = G*np.sin(np.pi*alpha_direct/2.)
-    # Calculate omega from t
-    omega = t**(-1.)
+    # Storage G1 and loss G2 moduli
+    G1_test = G*np.cos(np.pi*alpha_direct/2.)
+    G2_test = G*np.sin(np.pi*alpha_direct/2.)
+    # Calculate omega
+    omega = t**-1.
     # Convert omega to 1/s
     omega = omega*(1.e6)
     return [omega, G1, G2]
