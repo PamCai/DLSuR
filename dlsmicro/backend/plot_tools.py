@@ -198,8 +198,7 @@ def plot_replicates_from_df(df, my_quantity, plot_ci=True, myci=68.,
 
 def add_w_scaling(omega, scaling, w_b, placement):
 
-	""" Plot a given scaling on complex modulus plot to compared
-	against the complex modulus of a sample.
+	""" Plot a given scaling on complex modulus plot to compared against the complex modulus of a sample.
 
     Parameters
     ----------
