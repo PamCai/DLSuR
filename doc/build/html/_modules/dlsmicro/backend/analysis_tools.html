@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>dlsmicro.backend.analysis_tools &mdash; DLSuR 0.0.5+0.g87f95e1.dirty documentation</title>
+  <title>dlsmicro.backend.analysis_tools &mdash; DLSuR 0.0.8+0.gb8206ae.dirty documentation</title>
   
 
   
@@ -25,6 +25,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -58,7 +59,7 @@
             
             
               <div class="version">
-                0.0.5+0.g87f95e1.dirty
+                0.0.8+0.gb8206ae.dirty
               </div>
             
           
@@ -82,8 +83,14 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../export.html">Exporting Data from Malvern Zetasizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module.html">Analyzing Data Using Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis.html">Analyzing Data Using Prepared Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+</ul>
+
             
           
         </div>
@@ -500,19 +507,18 @@
     <span class="n">s</span> <span class="o">=</span> <span class="n">t</span><span class="o">**-</span><span class="mf">1.</span>
     <span class="n">msd_laplace</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">laplace</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">msd</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
     <span class="c1"># Calculate the G*s in laplace space</span>
-    <span class="n">Gs</span> <span class="o">=</span> <span class="p">(</span><span class="n">msd_laplace</span><span class="o">**-</span><span class="mf">1.</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">Gs</span> <span class="o">=</span> <span class="p">(</span><span class="n">msd_laplace</span><span class="o">**-</span><span class="mf">1.</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
     <span class="c1"># Perform a local power-law analysis of the laplace space shear modulus</span>
     <span class="p">[</span><span class="n">Theta</span><span class="p">,</span> <span class="n">logGs</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">loess</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Gs</span><span class="p">),</span> <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">bw</span><span class="p">)</span>
     <span class="c1"># Calculate the local scaling exponent</span>
     <span class="n">alpha_direct</span> <span class="o">=</span> <span class="n">Theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
-    <span class="c1"># Calculate the magnitude of the shear modulus</span>
-    <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logGs</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">s</span><span class="o">**-</span><span class="mf">1.</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logGs</span><span class="p">)</span>
     <span class="n">G</span> <span class="o">=</span> <span class="n">kb</span><span class="o">*</span><span class="n">T</span><span class="o">*</span><span class="p">(</span><span class="mf">1.e27</span><span class="p">)</span><span class="o">*</span><span class="n">G</span>
-    <span class="c1"># Calculate the real and imaginary compoments</span>
-    <span class="n">G2</span> <span class="o">=</span> <span class="o">-</span><span class="n">G</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">alpha_direct</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
-    <span class="n">G1</span> <span class="o">=</span> <span class="n">G</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">alpha_direct</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
-    <span class="c1"># Calculate omega from t</span>
-    <span class="n">omega</span> <span class="o">=</span> <span class="n">t</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
+    <span class="c1"># Storage G1 and loss G2 moduli</span>
+    <span class="n">G1_test</span> <span class="o">=</span> <span class="n">G</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">alpha_direct</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+    <span class="n">G2_test</span> <span class="o">=</span> <span class="n">G</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">alpha_direct</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+    <span class="c1"># Calculate omega</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">t</span><span class="o">**-</span><span class="mf">1.</span>
     <span class="c1"># Convert omega to 1/s</span>
     <span class="n">omega</span> <span class="o">=</span> <span class="n">omega</span><span class="o">*</span><span class="p">(</span><span class="mf">1.e6</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">omega</span><span class="p">,</span> <span class="n">G1</span><span class="p">,</span> <span class="n">G2</span><span class="p">]</span></div>

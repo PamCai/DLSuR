@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Analyzing Data Using Prepared Functions &mdash; DLSuR 0.0.8+0.gb8206ae.dirty documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="Notebook.html" />
+    <link rel="prev" title="Analyzing Data Using Modules" href="module.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DLSuR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.8+0.gb8206ae.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="export.html">Exporting Data from Malvern Zetasizer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module.html">Analyzing Data Using Modules</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Analyzing Data Using Prepared Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#modules">Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prepared-functions">Prepared Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#replicates">Replicates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conditions">Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time-points">Time Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples-of-using-prepared-functions">Examples of Using Prepared Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DLSuR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Analyzing Data Using Prepared Functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/analysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="analyzing-data-using-prepared-functions">
+<span id="analysis"></span><h1>Analyzing Data Using Prepared Functions<a class="headerlink" href="#analyzing-data-using-prepared-functions" title="Permalink to this headline">¶</a></h1>
+<p>The analysis script package is composed of a <code class="docutils literal notranslate"><span class="pre">backend</span></code> folder with many individual functions within modules and a few prepared functions outside of the <code class="docutils literal notranslate"><span class="pre">backend</span></code> folder that puts together the individual functions in order to readily analyze the exported data (just input the exported data file and a few parameters about the experiment).</p>
+<p>The structure of the package is as follows:</p>
+<div class="line-block">
+<div class="line">DLSuR</div>
+<div class="line-block">
+<div class="line">└── dlsmicro</div>
+<div class="line-block">
+<div class="line">├── analyze_conditions.py</div>
+<div class="line">├── analyze_replicates.py</div>
+<div class="line">├── analyze_time_points.py</div>
+<div class="line">├── plot_conditions.py</div>
+<div class="line">├── plot_replicates.py</div>
+<div class="line">├── plot_time_points.py</div>
+<div class="line">└── backend</div>
+<div class="line-block">
+<div class="line">├── analysis_tools.py</div>
+<div class="line">├── fit_funcs.py</div>
+<div class="line">├── io.py</div>
+<div class="line">├── plot_tools.py</div>
+<div class="line">└── utils.py</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<p>For full details on the functions within each module, see the section on <a class="reference internal" href="module.html#module"><span class="std std-ref">Analyzing Data Using Modules</span></a>.</p>
+</div>
+<div class="section" id="prepared-functions">
+<h2>Prepared Functions<a class="headerlink" href="#prepared-functions" title="Permalink to this headline">¶</a></h2>
+<p>For the prepared functions, where are three different kinds of data that can be analyzed and plotted (one function each for analysis and plotting).</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><a class="reference internal" href="#rst-replicates"><span class="std std-ref">Replicates</span></a></p></li>
+<li><p><a class="reference internal" href="#rst-conditions"><span class="std std-ref">Conditions</span></a></p></li>
+<li><p><a class="reference internal" href="#rst-timepoints"><span class="std std-ref">Time Points</span></a></p></li>
+</ol>
+</div></blockquote>
+<p>Any analysis that does not follow the format of these prepared functions can be done by piecing together a custom analysis script using the individual functions within the modules.</p>
+</div>
+<div class="section" id="replicates">
+<span id="rst-replicates"></span><h2>Replicates<a class="headerlink" href="#replicates" title="Permalink to this headline">¶</a></h2>
+<p>The simplest prepared function is the one to analyze replicates of one condition. For example, if you measure the rheology 3 times of the same material, then each of those are <strong>replicates</strong>. So, you might use the <code class="docutils literal notranslate"><span class="pre">analyze_replicates.py</span></code> script to analyze multiple replicates of the same condition (or even just one replicate of one condition).</p>
+<p>The data should be stored in the following folder structure before running the prepared function:</p>
+<div class="line-block">
+<div class="line">root_folder</div>
+<div class="line-block">
+<div class="line">├── replicate1</div>
+<div class="line">│   └── exported.csv</div>
+<div class="line">├── replicate2</div>
+<div class="line">│   └── exported.csv</div>
+<div class="line">└── replicate3</div>
+<div class="line-block">
+<div class="line">└── exported.csv</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze_replicates.py</span></code> script requires that all replicates are named the same name (i.e. all file names are <code class="docutils literal notranslate"><span class="pre">exported.csv</span></code>). Also, the script requires that the replicate folder names follow the above naming convention (i.e. <code class="docutils literal notranslate"><span class="pre">replicate</span></code> + (# of replicate)).</p>
+</div>
+<p>Lastly, the <code class="docutils literal notranslate"><span class="pre">plot_replicates.py</span></code> script takes in the outputted Pandas Dataframe and plots all replicates together (saving the Dataframe must be <code class="docutils literal notranslate"><span class="pre">True</span></code> in <code class="docutils literal notranslate"><span class="pre">analyze_replicates.py</span></code> in order for <code class="docutils literal notranslate"><span class="pre">plot_replicates.py</span></code> to work).</p>
+</div>
+<div class="section" id="conditions">
+<span id="rst-conditions"></span><h2>Conditions<a class="headerlink" href="#conditions" title="Permalink to this headline">¶</a></h2>
+<p>When there are multiple types of materials that are being measured, these types are called <strong>conditions</strong>. The <code class="docutils literal notranslate"><span class="pre">analyze_conditions.py</span></code> script is for analyzing across different material conditions.</p>
+<p>The folder structure before running <code class="docutils literal notranslate"><span class="pre">analyze_conditions.py</span></code> should follow:</p>
+<div class="line-block">
+<div class="line">root_folder</div>
+<div class="line-block">
+<div class="line">├── condition1</div>
+<div class="line">│   ├── replicate1</div>
+<div class="line">│   ├── replicate2</div>
+<div class="line">│   └── replicate3</div>
+<div class="line">├── condition2</div>
+<div class="line">│   ├── replicate1</div>
+<div class="line">│   ├── replicate2</div>
+<div class="line">│   └── replicate3</div>
+<div class="line">└── condition3</div>
+<div class="line-block">
+<div class="line">├── replicate1</div>
+<div class="line">├── replicate2</div>
+<div class="line">└── replicate3</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze_conditions.py</span></code> script requires that all replicates are named the same name (i.e. all file names are <code class="docutils literal notranslate"><span class="pre">exported.csv</span></code>). Also, the script requires that the replicate folder names follow the above naming convention (i.e. <code class="docutils literal notranslate"><span class="pre">replicate</span></code> + (# of replicate)). The <code class="docutils literal notranslate"><span class="pre">root_folder</span></code> and <code class="docutils literal notranslate"><span class="pre">condition#</span></code> folders can be anything you want, since the specific folder names must be fed into the function.</p>
+</div>
+<p>Again, the <code class="docutils literal notranslate"><span class="pre">plot_conditions.py</span></code> script, similarly to the <code class="docutils literal notranslate"><span class="pre">plot_replicates.py</span></code> script takes in the outputted Pandas Dataframe and plots all replicates and conditions together and requires the Dataframe be saved using <code class="docutils literal notranslate"><span class="pre">analyze_conditions.py</span></code>.</p>
+</div>
+<div class="section" id="time-points">
+<span id="rst-timepoints"></span><h2>Time Points<a class="headerlink" href="#time-points" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze_time_points.py</span></code> script is intended to facilitate measurements that are done continuously. For example, take 10 long time measurements in a row (varying in time) and one set of shorter measurements (varying in position). These types of experiments are for transient processes such as polymer gelation that occurs over the course of a couple hours to multiple hours.</p>
+<p>The file can be inputted directly into the function without any specific file structure since all of the different time points are saved in one data file.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">plot_time_points.py</span></code> script again requires that a Dataframe be saved first and plots each time point data together on one plot.</p>
+</div>
+<div class="section" id="examples-of-using-prepared-functions">
+<h2>Examples of Using Prepared Functions<a class="headerlink" href="#examples-of-using-prepared-functions" title="Permalink to this headline">¶</a></h2>
+<p>This is covered in the <span class="xref std std-ref">Tutorial Notebook Examples</span> section.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Notebook.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="module.html" class="btn btn-neutral float-left" title="Analyzing Data Using Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pam Cai, Brad Krajina
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

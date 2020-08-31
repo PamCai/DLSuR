@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Analyzing Data Using Modules &mdash; DLSuR 0.0.8+0.gb8206ae.dirty documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Analyzing Data Using Prepared Functions" href="analysis.html" />
+    <link rel="prev" title="Exporting Data from Malvern Zetasizer Instrument" href="export.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DLSuR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.8+0.gb8206ae.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="export.html">Exporting Data from Malvern Zetasizer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Analyzing Data Using Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prepared-functions">Prepared Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modules">Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-analysis-tools">Data Analysis Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fit-functions">Fit Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-exported-data">Reading Exported Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-tools">Plotting Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples-of-using-prepared-functions">Examples of Using Prepared Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analyzing Data Using Prepared Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DLSuR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Analyzing Data Using Modules</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/module.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="analyzing-data-using-modules">
+<span id="module"></span><h1>Analyzing Data Using Modules<a class="headerlink" href="#analyzing-data-using-modules" title="Permalink to this headline">¶</a></h1>
+<p>The analysis script package is composed of a <code class="docutils literal notranslate"><span class="pre">backend</span></code> folder with many individual functions within modules and a few prepared functions outside of the <code class="docutils literal notranslate"><span class="pre">backend</span></code> folder that puts together the individual functions in order to readily analyze the exported data (just input the exported data file and a few parameters about the experiment).</p>
+<p>The structure of the package is as follows:</p>
+<div class="line-block">
+<div class="line">DLSuR</div>
+<div class="line-block">
+<div class="line">└── dlsmicro</div>
+<div class="line-block">
+<div class="line">├── analyze_conditions.py</div>
+<div class="line">├── analyze_replicates.py</div>
+<div class="line">├── analyze_time_points.py</div>
+<div class="line">├── plot_conditions.py</div>
+<div class="line">├── plot_replicates.py</div>
+<div class="line">├── plot_time_points.py</div>
+<div class="line">└── backend</div>
+<div class="line-block">
+<div class="line">├── analysis_tools.py</div>
+<div class="line">├── fit_funcs.py</div>
+<div class="line">├── io.py</div>
+<div class="line">├── plot_tools.py</div>
+<div class="line">└── utils.py</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="prepared-functions">
+<h2>Prepared Functions<a class="headerlink" href="#prepared-functions" title="Permalink to this headline">¶</a></h2>
+<p>For full details on the functions within each module, see the section on <a class="reference internal" href="analysis.html#analysis"><span class="std std-ref">Analyzing Data Using Prepared Functions</span></a>.</p>
+</div>
+<div class="section" id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
+<p>The modules each have multiple functions within them. These functions are grouped such that each module’s functions are used towards similar goals. The modules are broken into:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><a class="reference internal" href="#rst-analysistool"><span class="std std-ref">Data Analysis Tools</span></a></p></li>
+<li><p><a class="reference internal" href="#rst-fitfunc"><span class="std std-ref">Fit Functions</span></a></p></li>
+<li><p><a class="reference internal" href="#rst-io"><span class="std std-ref">Reading Exported Data</span></a></p></li>
+<li><p><a class="reference internal" href="#rst-plottools"><span class="std std-ref">Plotting Tools</span></a></p></li>
+<li><p><a class="reference internal" href="#rst-util"><span class="std std-ref">Utilities</span></a></p></li>
+</ol>
+</div></blockquote>
+<p>In the following sections, the module and its role in the process of analyzing the exported data from the Malvern Zetasizer will be explained.</p>
+</div>
+<div class="section" id="data-analysis-tools">
+<span id="rst-analysistool"></span><h2>Data Analysis Tools<a class="headerlink" href="#data-analysis-tools" title="Permalink to this headline">¶</a></h2>
+<p>The functions in this module are used for the analysis of the scattering function outputted by the DLS instrument. This includes all-encompassing function <cite>full_dlsur_analysis</cite> as well as all of the smaller functions called on by this all-encompassing function.</p>
+<p>When using the functions in this module, one can call on <cite>full_dlsur_analysis</cite> to do the entire analysis. Or, one can switch up certain analysis functions. For example, the <cite>full_dlsur_analysis</cite> function uses the power-law analysis method for evaluating the mean-squared displacement using <cite>msd_local_pwr_law</cite> and <cite>shear_modulus</cite>. So, if one wants to see the Laplace transform method, one can write a custom script that ties together the individual functions, using <cite>shear_modulus_laplace_transform</cite>.</p>
+</div>
+<div class="section" id="fit-functions">
+<span id="rst-fitfunc"></span><h2>Fit Functions<a class="headerlink" href="#fit-functions" title="Permalink to this headline">¶</a></h2>
+<p>The functions in this module are used for fitting the scattering autocorrelation function. It consists of two different types of fit: stretched exponential (<cite>stretched_exp</cite>) and double exponential (<cite>expexp</cite>). Depending on how you want to fit the scattering autocorrelation function, you can choose which fit to use.</p>
+</div>
+<div class="section" id="reading-exported-data">
+<span id="rst-io"></span><h2>Reading Exported Data<a class="headerlink" href="#reading-exported-data" title="Permalink to this headline">¶</a></h2>
+<p>This module contains one function, which reads the data in the exported file and outputs the data in a dictionary format for easy access by future analysis functions.</p>
+<p>The export template specified in <a class="reference internal" href="export.html#export"><span class="std std-ref">Exporting Data from Malvern Zetasizer Instrument</span></a> is only required if one uses the function in this module.</p>
+</div>
+<div class="section" id="plotting-tools">
+<span id="rst-plottools"></span><h2>Plotting Tools<a class="headerlink" href="#plotting-tools" title="Permalink to this headline">¶</a></h2>
+<p>This module contains all the functions that are needed for plotting the data from the outputted Dataframes. These functions include ones that put the data into the format needed for plotting (such as <cite>df_to_matrix</cite> for combining multiple replicates and determining the standard deviation), ones that plot the data (such as <cite>plot_replicates_from_df</cite>), and ones that add features to the plot (such as <cite>add_w_scaling</cite>).</p>
+</div>
+<div class="section" id="utilities">
+<span id="rst-util"></span><h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>In this module, there are functions that do miscellaneous work supporting the functions in other modules. For example, there is a function that calculates the Laplace transform. These functions can be leveraged by the individual user to create custom analysis functions.</p>
+</div>
+<div class="section" id="examples-of-using-prepared-functions">
+<h2>Examples of Using Prepared Functions<a class="headerlink" href="#examples-of-using-prepared-functions" title="Permalink to this headline">¶</a></h2>
+<p>This is covered in the <span class="xref std std-ref">Tutorial Notebook Examples</span> section.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="analysis.html" class="btn btn-neutral float-right" title="Analyzing Data Using Prepared Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="export.html" class="btn btn-neutral float-left" title="Exporting Data from Malvern Zetasizer Instrument" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Pam Cai, Brad Krajina
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

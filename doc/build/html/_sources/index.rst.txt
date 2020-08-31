@@ -15,6 +15,12 @@ Please visit `this package's Github page <https://github.com/PamCai/DLSuR>`_ to 
    :maxdepth: 2
    :caption: Contents:
 
+   Exporting Data from Malvern Zetasizer <export>
+   Analyzing Data Using Modules <module>
+   Analyzing Data Using Prepared Functions <analysis>
+   Tutorial Notebook Examples <Notebook>
+   API Documentation <api>
+
 
 
 Indices and tables
