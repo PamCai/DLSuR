@@ -12,7 +12,7 @@ Setting up the export template
 
 The data, which should be composed of one longer measurement that collects the time-averaged scattering and several shorter measurements that collect the position-dependent scattering, must be exported in a specified format, which can be made into a template to be saved in the ``Export Templates`` folder.
 
-To do so, select all rows of the data, then go to ``File`` and then ``Export``. In the first tab, be sure to save the file where you want to save it and ensure that the file is a ``.csv`` file. In the second tab, select the option to export using a template and create a new one.
+To do so, select all rows of the data, then go to ``File`` and then ``Export...``. In the first tab, be sure to save the file where you want to save it and ensure that the file is a ``.csv`` file. In the second tab called ``Parameters``, select the option ``Use export template parameters`` to export using a template and create a new one.
 
 As previously documented (insert reference to paper), the new template should contain the following information in exactly this order:
 
@@ -29,7 +29,7 @@ As previously documented (insert reference to paper), the new template should co
 11. Measured Intercept
 12. Measured Size Baseline
 
-Additionally, it is critical to select the option to keep each piece of data separated by tabs.
+Additionally, it is critical to NOT check the option ``Include Header Row``, select the option ``Enclose text in quotation marks`` to keep each piece of data separated in its own column, and select ``Use comma as separators`` to allow compatibility with the analysis script method.
 
 Give this template a name (not Microrheology because that is a default template).
 
@@ -41,7 +41,7 @@ Once you have saved this template and selected it as the template for exporting 
 In the future, you can cut short your steps for exporting your data to:
 
 1. Select all rows of your data
-2. Go to ``File`` and select ``Export``.
+2. Go to ``File`` and select ``Export..``.
 3. Select the destination for your data and ensure the file is saved as a ``.csv`` file.
-4. In the second tab, select the option to save the data using a template and choose the template you made above.
+4. In the second tab ``Parameters``, select the option ``Use export template parameters`` to save the data using a template and choose the template you made above.
 5. Click ``OK``. Your data is saved!
