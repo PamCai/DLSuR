@@ -6,7 +6,7 @@ import csv
 import os
 import sys
 from setuptools import setup, find_packages
-from io import open
+from io
 import versioneer
 
 # Constants
@@ -17,7 +17,7 @@ LICENSE = 'BSD-3-Clause'
 
 
 # Parse description
-with open('README.md', encoding='utf8') as f:
+with io.open('README.md', encoding='utf8') as f:
     README = f.read().split('\n')
     LONG_DESCRIPTION = '\n'.join([x for x in README if not x[:3]=='[!['])
 
@@ -27,7 +27,7 @@ CMDCLASS = versioneer.get_cmdclass()
 
 
 # Parse requirements.txt
-with open('requirements.txt', 'r') as f:
+with io.open('requirements.txt', 'r') as f:
     REQUIREMENTS = f.read().split('\n')
 
 
