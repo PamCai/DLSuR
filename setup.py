@@ -25,6 +25,7 @@ VERSION = versioneer.get_version()
 CMDCLASS = versioneer.get_cmdclass()
 
 
+import pdb; pdb.set_trace()
 # Parse requirements.txt
 with open('requirements.txt', 'r') as f:
     REQUIREMENTS = f.read().split('\n')
