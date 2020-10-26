@@ -35,7 +35,7 @@ Cai P. C., Krajina B. A., Kratochvil M. J., Zou L., Zhu A., Burgener E. B., Boll
 
 DLSuR requires:
 
-* Python (>= 3.7)
+* Python (>= 3.7 but no higher than 3.8)
 * SciPy 
 * NumPy
 * Matplotlib
@@ -53,7 +53,7 @@ DLSuR from the Python Package Index (PyPI):
 pip install DLSuR
 ```
 
-Linux and macOS are the two officially supported operating systems.
+Linux and macOS are the two officially supported operating systems. NOTE: sometimes there will be an error requiring the package `keyring` (version >=15.1).
 
 
 # Installation from source
@@ -65,16 +65,21 @@ pip install -r requirements.txt
 python setup.py install
 ```
 
-Developers can also install Kymatio via:
+Once installed, DLSuR can be imported and utilized by using the following at the top of your Python scripts:
 
 ```
-pip install -r requirements.txt
-python setup.py develop
+import dlsmicro
+```
+
+Alternatively, you can import the functions as:
+
+```
+from dlsmicro import analyze_conditions
 ```
 
 # Documentation
 
-The documentation of Kymatio is officially hosted on the [DLSuR](https://dlsur.readthedocs.io/) website.
+The documentation of DLSuR is officially hosted on the [DLSuR](https://dlsur.readthedocs.io/) website.
 
 
 ## Online resources

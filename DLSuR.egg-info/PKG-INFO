@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: DLSuR
-Version: 0.0.16
+Version: 0.0.17
 Summary: Dynamic light scattering microrheology data analysis package
 Home-page: https://github.com/PamCai/DLSuR
 Author: Brad Krajina, Pam Cai,
@@ -114,6 +114,7 @@ Classifier: Programming Language :: Python :: 3.5
 Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
 Classifier: Topic :: Scientific/Engineering :: Information Analysis
 Classifier: Topic :: Scientific/Engineering :: Mathematics
 Classifier: Topic :: Scientific/Engineering :: Physics
