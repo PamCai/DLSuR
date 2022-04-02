@@ -361,8 +361,8 @@ def shear_modulus_laplace_transform(t, msd, r, T, bw=0.01):
     G = np.exp(logGs)
     G = kb*T*(1.e27)*G
     # Storage G1 and loss G2 moduli
-    G1_test = G*np.cos(np.pi*alpha_direct/2.)
-    G2_test = G*np.sin(np.pi*alpha_direct/2.)
+    G1 = G*np.cos(np.pi*alpha_direct/2.)
+    G2 = G*np.sin(np.pi*alpha_direct/2.)
     # Calculate omega
     omega = t**-1.
     # Convert omega to 1/s

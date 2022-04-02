@@ -40,7 +40,7 @@ def plot_time_points(df_path, n_points, plot_G_replicates=True,
 	rc('lines', linewidth=1)
 
 	# Row numbers for correlation time points (time_points)
-    time_points = range(1, n_points, 1)
+	time_points = range(1, n_points, 1)
 	# if cuvette == 'disposable':
 	# 	time_points = range(1, 12, 1)
 	# elif cuvette == 'quartz':

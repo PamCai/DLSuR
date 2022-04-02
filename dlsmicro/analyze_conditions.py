@@ -9,7 +9,8 @@ def analyze_conditions(csv_name, root_folder, condition_dir,
                        replicate_dict, T, r, erg, Laplace=False, 
                        df_save_path=None, df_file_name=None, 
                        save_as_text=True, save_as_df=True,
-                       plot_corr=False, plot_msd=False, plot_G=False):
+                       plot_corr=False, plot_msd=False, plot_G=False,
+                       save_plots=False):
 
     """ Analyze files exported from Zetasizer software for multiple 
     conditions and plot data per replicate of a condition.
@@ -55,6 +56,8 @@ def analyze_conditions(csv_name, root_folder, condition_dir,
                of each replicate
     plot_G : boolean, `optional`
              If `True`, show plot of the shear modulus of each replicate
+    save_plots : boolean, `optional`
+             If `True`, saves plots of correlation function, MSD, G
     """
 
     conditions = list(condition_dir.keys())
@@ -65,13 +68,13 @@ def analyze_conditions(csv_name, root_folder, condition_dir,
     else:
         T_dict = dict((k, T) for k, v in condition_dir.items())
     if type(r) is dict:
-        if T.keys() != condition_dir.keys():
+        if r.keys() != condition_dir.keys():
             raise Exception('Keys for radius dictionary do not match conditions')
         r_dict = r
     else:
         r_dict = dict((k, r) for k, v in condition_dir.items())
     if type(erg) is dict:
-        if T.keys() != condition_dir.keys():
+        if erg.keys() != condition_dir.keys():
             raise Exception('Keys for ergodicity dictionary do not match conditions')
         erg_dict = erg
     else:
@@ -115,6 +118,7 @@ def analyze_conditions(csv_name, root_folder, condition_dir,
 
             # Get a DLS microrheology object that contains all raw data
             # and analyzed results. 
+            T = T_dict[condition]
             r = r_dict[condition]
             ergodic = erg_dict[condition]
             q = analysis_tools.calc_q(n, theta, lam)
@@ -145,7 +149,7 @@ def analyze_conditions(csv_name, root_folder, condition_dir,
             dlsmicro_df['id'] = idx
 
             idx += 1
-            df = df.append(dlsmicro_df, sort=True)
+            df = pd.concat((df,dlsmicro_df), axis=0, sort=True)
 
             ###############################################
             # Plot the analyzed data for this replicate
@@ -156,6 +160,12 @@ def analyze_conditions(csv_name, root_folder, condition_dir,
                 plt.xscale('log')
                 plt.xlabel('$\\mathregular{time\ (\\mu s)}$')
                 plt.ylabel('g')
+                plt.tight_layout()
+                if save_plots:
+                    save_path = '%s/%s/replicate%s/corr' % (root_folder,
+                                                            condition_dir[condition],
+                                                            replicate)
+                    plt.savefig(save_path)
                 plt.show()
             if plot_msd:
                 plt.plot(dlsmicro_df['t'], dlsmicro_df['msd_smooth'], '-r')
@@ -163,16 +173,28 @@ def analyze_conditions(csv_name, root_folder, condition_dir,
                 plt.yscale('log')
                 plt.xlabel('$\\mathregular{time\ (\\mu s)}$')
                 plt.ylabel('MSD')
+                plt.tight_layout()
+                if save_plots:
+                    save_path = '%s/%s/replicate%s/msd' % (root_folder,
+                                                            condition_dir[condition],
+                                                            replicate)
+                    plt.savefig(save_path)
                 plt.show()
             if plot_G:
-                plt.plot(dlsmicro_df['omega'], dlsmicro_df['G1'], '-r', lw=2.0)
-                plt.plot(dlsmicro_df['omega'], dlsmicro_df['G2'], '--r', lw=2.0)
+                plt.plot(dlsmicro_df['omega'], dlsmicro_df['G1'], '-r')
+                plt.plot(dlsmicro_df['omega'], dlsmicro_df['G2'], '--r')
                 plt.ylabel('$\\mathregular{G^*\ (Pa)}$')
                 plt.xlabel('$\\mathregular{\\omega\ (s^{-1})}$')
                 plt.legend(['$\\mathregular{G^{\\prime}}$',
                             '$\\mathregular{G^{\\prime \\prime}}$'], frameon=False,)
                 plt.xscale('log')
                 plt.yscale('log')
+                plt.tight_layout()
+                if save_plots:
+                    save_path = '%s/%s/replicate%s/G' % (root_folder,
+                                                            condition_dir[condition],
+                                                            replicate)
+                    plt.savefig(save_path)
                 plt.show()
 
             ##############################################

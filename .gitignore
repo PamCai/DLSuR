@@ -1,0 +1,4 @@
+__pycache__
+*.pyc
+*/*.pyc
+dlsmicro/__pycache__/

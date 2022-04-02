@@ -9,7 +9,7 @@ def analyze_replicates(csv_name, root_folder, replicates,
                        T, r, ergodic, Laplace=False, df_save_path=None, 
                        df_file_name=None, save_as_text=True, 
                        save_as_df=True, plot_corr=False, 
-                       plot_msd=False, plot_G=False):
+                       plot_msd=False, plot_G=False, save_plots=False):
 
     """ Analyze files exported from Zetasizer software for multiple 
     conditions and plot data per replicate of a condition.
@@ -53,6 +53,8 @@ def analyze_replicates(csv_name, root_folder, replicates,
                of each replicate
     plot_G : boolean, `optional`
              If `True`, show plot of the shear modulus of each replicate
+    save_plots : boolean, `optional`
+             If `True`, saves plots of correlation function, MSD, G
     """
 
     if df_save_path == None:
@@ -115,7 +117,7 @@ def analyze_replicates(csv_name, root_folder, replicates,
         dlsmicro_df['scattering'] = scattering
         dlsmicro_df['epos'] = positions
 
-        df = df.append(dlsmicro_df, sort=True)
+        df = pd.concat((df,dlsmicro_df), axis=0, sort=True)
 
         ###############################################
         # Plot the analyzed data for this replicate
@@ -126,6 +128,10 @@ def analyze_replicates(csv_name, root_folder, replicates,
             plt.xscale('log')
             plt.xlabel('$\\mathregular{time\ (\\mu s)}$')
             plt.ylabel('g')
+            if save_plots:
+              save_path = '%s/replicate%s/corr' % (root_folder,
+                                                   replicate)
+              plt.savefig(save_path)
             plt.show()
         if plot_msd:
             plt.plot(dlsmicro_df['t'], dlsmicro_df['msd_smooth'], '-r')
@@ -133,16 +139,24 @@ def analyze_replicates(csv_name, root_folder, replicates,
             plt.yscale('log')
             plt.xlabel('$\\mathregular{time\ (\\mu s)}$')
             plt.ylabel('MSD')
+            if save_plots:
+              save_path = '%s/replicate%s/msd' % (root_folder,
+                                                   replicate)
+              plt.savefig(save_path)
             plt.show()
         if plot_G:
-            plt.plot(dlsmicro_df['omega'], dlsmicro_df['G1'], '-r', lw=2.0)
-            plt.plot(dlsmicro_df['omega'], dlsmicro_df['G2'], '--r', lw=2.0)
+            plt.plot(dlsmicro_df['omega'], dlsmicro_df['G1'], '-r')
+            plt.plot(dlsmicro_df['omega'], dlsmicro_df['G2'], '--r')
             plt.ylabel('$\\mathregular{G^*\ (Pa)}$')
             plt.xlabel('$\\mathregular{\\omega\ (s^{-1})}$')
             plt.legend(['$\\mathregular{G^{\\prime}}$',
                         '$\\mathregular{G^{\\prime \\prime}}$'], frameon=False,)
             plt.xscale('log')
             plt.yscale('log')
+            if save_plots:
+              save_path = '%s/replicate%s/G' % (root_folder,
+                                                   replicate)
+              plt.savefig(save_path)
             plt.show()
 
         ##############################################

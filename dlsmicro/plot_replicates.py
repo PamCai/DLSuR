@@ -45,7 +45,7 @@ def plot_replicates(df_path, replicates, replic_color=None,
 
 	# set colors and labels in dictionaries
 	if replic_color == None:
-		cmap = plt.cm.get_cmap('hsv',len(replicates)*2)
+		cmap = plt.cm.get_cmap('hot',len(replicates)*2)
 		colors = [cmap(i) for i in range(len(replicates))]
 		replic_color = dict(zip(replicates, colors))
 
@@ -68,10 +68,12 @@ def plot_replicates(df_path, replicates, replic_color=None,
 				          			 scaling_frac,
 				          		     df[df['replicate'] == replicates[0]]['G2'][2],
 				          			 [2./6.,3./6.])
-
-		plt.legend(['$\\mathregular{G^{\\prime}}$',
-		            '$\\mathregular{G^{\\prime \\prime}}$'], frameon=False,
-		            fontsize=16)
+		handles = [None] * (2)
+		handles[0] = plt.Line2D((0, 1), (0, 0), color=replic_color[replicates[0]], dashes='',
+								label='$\mathregular{G^{\prime}}$')
+		handles[1] = plt.Line2D((0, 1), (0, 0), color=replic_color[replicates[0]], ls='--',
+								label='$\mathregular{G^{\prime \prime}}$')
+		plt.legend(handles=handles, frameon=False, fontsize=16)
 		plt.ylabel('$\\mathregular{G^*\ (Pa)}$')
 		plt.xlabel('$\\mathregular{\\omega\ (s^{-1})}$')
 		plt.xscale('log')

@@ -152,8 +152,7 @@ def bootstrap_freq_sweep_ci(df, quantity, replicate_identifier,
 
 def plot_replicates_from_df(df, my_quantity, plot_ci=True, myci=68., 
 							estimator=np.mean, color='m', ls='-', 
-							err_alpha=0.25, err_lw=2.5,
-                            identifier='replicate'):
+							err_alpha=0.25, err_lw=2.5, identifier='replicate'):
 
     """ Plot a given quantity from the Dataframe, averaging across
     all replicates in that Dataframe.
@@ -192,13 +191,16 @@ def plot_replicates_from_df(df, my_quantity, plot_ci=True, myci=68.,
     ci_high = ci[1]
     y_mu = estimator(y_matrix, axis=0)
     plt.plot(time, y_mu, color=color, ls=ls)
+    time = np.array(time, dtype=float)
+    ci_low = np.array(ci_low, dtype=float)
+    ci_high = np.array(ci_high, dtype=float)
     if plot_ci:
-    	plt.fill_between(time, ci_low, ci_high, color=color,
-    		             alpha=err_alpha, linewidth=err_lw)
+        plt.fill_between(time, ci_low, ci_high, color=color,
+                         alpha=err_alpha, linewidth=err_lw)
 
 def add_w_scaling(omega, scaling, w_b, placement):
-
-	""" Plot a given scaling on complex modulus plot to compared against the complex modulus of a sample.
+    
+  """ Plot a given scaling on complex modulus plot to compared against the complex modulus of a sample.
 
     Parameters
     ----------
@@ -219,13 +221,13 @@ def add_w_scaling(omega, scaling, w_b, placement):
     	   		of the second element
     """
 
-	lolim = np.int(len(omega)*placement[0])
-	hilim = np.int(len(omega)*placement[1])
-	g_scale = np.float_power(omega, scaling[0]/scaling[1])*w_b/np.float_power(omega[lolim], 
-		                     scaling[0]/scaling[1])
-	plt.plot(omega[lolim:hilim], g_scale[lolim:hilim], ls='--', color='k',linewidth=2)
-	model = np.int(0.6*(lolim+hilim))
-	plt.text(omega[model],g_scale[model]*1.6,
-		     '$\omega^{%(top)s/%(bot)s}$'%{'top':np.int(scaling[0]),
-		     'bot':np.int(scaling[1])},fontsize=12)
+  lolim = np.int(len(omega)*placement[0])
+  hilim = np.int(len(omega)*placement[1])
+  omega = np.array(omega,dtype=float)
+  g_scale = np.float_power(omega, scaling[0]/scaling[1])*w_b/np.float_power(omega[lolim],scaling[0]/scaling[1])
+  plt.plot(omega[lolim:hilim], g_scale[lolim:hilim], ls='--', color='k',linewidth=2)
+  model = np.int(0.6*(lolim+hilim))
+  plt.text(omega[model],g_scale[model]*1.6,
+  	     '$\omega^{%(top)s/%(bot)s}$'%{'top':np.int(scaling[0]),
+  	     'bot':np.int(scaling[1])},fontsize=12)
 

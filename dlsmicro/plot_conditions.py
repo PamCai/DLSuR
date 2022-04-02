@@ -47,7 +47,7 @@ def plot_conditions(df_path, condition_dir, replicate_dict, cond_color=None,
 
 	# set colors and labels in dictionaries
 	if cond_color == None:
-		cmap = plt.cm.get_cmap('hsv',len(conditions)*2)
+		cmap = plt.cm.get_cmap('hot',len(conditions)*2)
 		colors = [cmap(i) for i in range(len(conditions))]
 		cond_color = dict(zip(conditions, colors))
 	if cond_label == None:
@@ -59,7 +59,7 @@ def plot_conditions(df_path, condition_dir, replicate_dict, cond_color=None,
 		rc('xtick', labelsize=18.)
 		rc('ytick', labelsize=18.)
 		rc('lines', markersize=10)
-		rc('lines', linewidth=1.5)
+		rc('lines', linewidth=3.)
 
 		fig, ax1 = plt.subplots(1, 1)
 		dash_style = (6, 2)

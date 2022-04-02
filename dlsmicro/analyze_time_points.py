@@ -131,7 +131,7 @@ def analyze_time_points(file_path, T, r, ergodic, n_points, n_positions,
         dlsmicro_df['scattering'] = scattering
         dlsmicro_df['epos'] = positions
 
-        df = df.append(dlsmicro_df, sort=True)
+        df = pd.concat((df,dlsmicro_df), axis=0, sort=True)
 
         ###############################################
         # Plot the analyzed data
