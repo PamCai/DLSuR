@@ -16,6 +16,7 @@ Please visit `this package's Github page <https://github.com/PamCai/DLSuR>`_ to 
    :caption: Contents:
 
    Exporting Data from Malvern Zetasizer <export>
+   Installation and Implementation of DLSuR Python Package <install>
    Analyzing Data Using Modules <module>
    Analyzing Data Using Prepared Functions <analysis>
    Tutorial Notebook Examples <Notebook>
