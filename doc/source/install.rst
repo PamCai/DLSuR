@@ -26,9 +26,9 @@ Creating an Anaconda Environment
 
 To create an Anaconda environment, simple enter in the command line the following code.
 
-```
-conda create --name example
-```
+.. code-block:: bash
+
+    $ conda create --name example
 
 You can replace ``example`` with any name you choose to name your environment.
 
@@ -39,31 +39,31 @@ Installing DLSuR Python Package
 
 Before installing ``DLSuR``, enter your environment by entering into your command line the following code.
 
-```
-conda activate example
-```
+.. code-block:: bash
+
+    $ conda activate example
 
 Again, ``example`` should be replaced with the name you have chosen for your created environment.
 
 Next, we need to install a preliminary package first so that we have the Python package ``pip`` installed. For this, we will install the Python package ``scipy``.
 
-```
-conda install scipy
-```
+.. code-block:: bash
+
+    $ conda install scipy
 
 Click through the prompts (i.e. it will ask whether you want to proceed, type ``y``). Once ``scipy`` has been installed, you can double check that ``pip`` has also been installed by typing the following into your command line:
 
-```
-conda list
-```
+.. code-block:: bash
+
+    $ conda list
 
 The package ``pip`` should show up in the list that appears.
 
 Now, we install ``DLSuR`` by entering the following code.
 
-```
-pip install DLSuR
-```
+.. code-block:: bash
+
+    $ pip install DLSuR
 
 This can take some time. Please be patient. Once it is finished, congratulations! You now have ``DLSuR`` installed!
 
@@ -72,68 +72,45 @@ This can take some time. Please be patient. Once it is finished, congratulations
 Importing and Implementing DLSuR
 --------------------------------
 
-To actually use the functions within the ``DLSuR`` package, you need to import them into your code file. This can be done by adding the following line at the top of your code file.
+To actually use the functions within the ``DLSuR`` package, you need to import them into your code file. This can be done by adding the following line at the top of your code file::
 
-```json
-import dlsmicro
-```
+    import dlsmicro
 
-If you want to import a specific function (i.e. ``analyze_conditions``), then you can use the following syntax.
+If you want to import a specific function (i.e. ``analyze_conditions``), then you can use the following syntax::
 
-```json
-from dlsmicro import analyze_conditions
-```
+    from dlsmicro import analyze_conditions
 
-If the above line does now allow you to find the function, try the following code.
+If the above line does now allow you to find the function, try the following code::
 
-```json
-from dlsmicro.analyze_conditions import analyze_conditions
-```
+    from dlsmicro.analyze_conditions import analyze_conditions
 
-To use this function, define all of the inputs required, including file names, replicates list, temperature, particle radius. See below for an example of the inputs being defined.
+To use this function, define all of the inputs required, including file names, replicates list, temperature, particle radius. See below for an example of the inputs being defined::
 
-```json
-# best to name all csv files the same
-csv_name = 'exported2.csv'
-# file path to conditions
-root_folder = 'example_data/condition_example'
-# dictionary listing the name of the folders associated with each
-# condition where condition 1 is the folder 'cold1', etc
-condition_dir = {'condition1': 'cond1', 
+    csv_name = 'exported2.csv'
+    root_folder = 'example_data/condition_example'
+    condition_dir = {'condition1': 'cond1', 
 				 'condition2': 'cond2'}
-# numbered files for each replicate as 'replicateX' where X = [1,2,3]
-# in each condition
-replicate_dict = {'condition1': [1,2,3], 
+	replicate_dict = {'condition1': [1,2,3], 
                  'condition2': [1]}
-# dictionary specifying colors for plotting each condition
-cond_color = {'condition1': 'r', 'condition2': 'b'}
-# dictionary specifying temperature of each condition
-T = {'condition1': 37. + 273.15, 'condition2': 25. + 273.15}
-# dictionary specifying particle size of each condition
-r = {'condition1': 500./2., 'condition2': 1000./2.}
-# dictionary specifying ergodicity assumption of each condition
-erg = {'condition1': True, 'condition2': False}
-```
+	cond_color = {'condition1': 'r', 'condition2': 'b'}
+	T = {'condition1': 37. + 273.15, 'condition2': 25. + 273.15}
+	r = {'condition1': 500./2., 'condition2': 1000./2.}
+	erg = {'condition1': True, 'condition2': False}
 
-The function ``analyze_conditions`` can now be used to analyze the data defined above.
 
-```json
-analyze_conditions(csv_name, root_folder, condition_dir, 
+The function ``analyze_conditions`` can now be used to analyze the data defined above::
+
+    analyze_conditions(csv_name, root_folder, condition_dir, 
 	               replicate_dict, T, r, erg, Laplace=True,
 	               save_as_text=True, save_as_df=True,
 	               plot_corr=True, plot_msd=True, plot_G=True)
-```
 
-The analyzed data is saved as a Pandas Dataframe in the ``root_folder`` and titled ``condition_data.pkl`` unless you have defined a different name using the input parameter ``df_file_name``. This Dataframe is the data input for the function ``plot_conditions`` that allows you to see all conditions plotted together as the average of the replicates of each condition.
+The analyzed data is saved as a Pandas Dataframe in the ``root_folder`` and titled ``condition_data.pkl`` unless you have defined a different name using the input parameter ``df_file_name``. This Dataframe is the data input for the function ``plot_conditions`` that allows you to see all conditions plotted together as the average of the replicates of each condition::
 
-```json
-# all analyzed data is saved as a Dataframe if save_as_df = True
-saved_df = root_folder + '/' + 'condition_data.pkl'
-# function to plot average of analyzed data across replicates for 
-# all conditions
-plot_conditions(saved_df, condition_dir, replicate_dict, plot_ci=True,
+    saved_df = root_folder + '/' + 'condition_data.pkl'
+
+    plot_conditions(saved_df, condition_dir, replicate_dict, plot_ci=True,
 	            cond_color=None, plot_scattering=True, 
 	            add_scaling=True, scaling_frac=[3.,4.])
-```
 
 Please visit `this package's Github page <https://github.com/PamCai/DLSuR>`_ to find the above code blocks in the file ``test_new.py`` and the example data referenced here to see how the file structure is set up.
