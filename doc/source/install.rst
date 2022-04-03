@@ -88,14 +88,12 @@ To use this function, define all of the inputs required, including file names, r
 
     csv_name = 'exported2.csv'
     root_folder = 'example_data/condition_example'
-    condition_dir = {'condition1': 'cond1', 
-				 'condition2': 'cond2'}
-	replicate_dict = {'condition1': [1,2,3], 
-                 'condition2': [1]}
-	cond_color = {'condition1': 'r', 'condition2': 'b'}
-	T = {'condition1': 37. + 273.15, 'condition2': 25. + 273.15}
-	r = {'condition1': 500./2., 'condition2': 1000./2.}
-	erg = {'condition1': True, 'condition2': False}
+    condition_dir = {'condition1': 'cond1', 'condition2': 'cond2'}
+    replicate_dict = {'condition1': [1,2,3], 'condition2': [1]}
+    cond_color = {'condition1': 'r', 'condition2': 'b'}
+    T = {'condition1': 37. + 273.15, 'condition2': 25. + 273.15}
+    r = {'condition1': 500./2., 'condition2': 1000./2.}
+    erg = {'condition1': True, 'condition2': False}
 
 
 The function ``analyze_conditions`` can now be used to analyze the data defined above::
